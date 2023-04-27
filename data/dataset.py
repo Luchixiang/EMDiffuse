@@ -1,0 +1,432 @@
+import torch.utils.data as data
+from torchvision import transforms
+import torchvision.transforms.functional as TF
+from PIL import Image, ImageOps
+import os
+import torch
+import numpy as np
+import torchvision.transforms.functional as TF
+import random
+import torch
+from PIL import Image, ImageFilter
+from tifffile import imread
+import copy
+import glob
+
+from .util.mask import (bbox2mask, brush_stroke_mask, get_irregular_mask, random_bbox, random_cropping_bbox)
+import torch.multiprocessing
+
+
+def find_max_number(folder_path):
+    max_number = 0
+    for filename in os.listdir(folder_path):
+        if filename.endswith('.tif'):
+            filename = filename[:-4]
+        if not filename.isdigit():
+            continue
+        filename = int(filename)
+
+        number = int(filename)
+        max_number = max(max_number, number)
+    return max_number
+
+
+def pil_loader(path):
+    return Image.open(path).convert('L')
+
+
+def pil_loader_noL(path):
+    return Image.open(path)
+
+
+def invert(tensor):
+    return 1 - tensor
+
+
+class EMDiffusenDataset(data.Dataset):  # Denoise and super-resolution Dataset
+    def __init__(self, data_root, data_len=-1, norm=True, percent=False, phase='train', image_size=[256, 256],
+                 loader=pil_loader):
+        self.data_root = data_root
+        print('in dataset:', self.data_root)
+        self.phase = phase
+        print(phase)
+        self.img_paths, self.gt_paths = self.read_dataset(self.data_root)
+        self.tfs = transforms.Compose([
+            transforms.Resize((image_size[0], image_size[1])),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.5], std=[0.5])
+        ])
+
+        self.loader = loader
+        self.norm = norm
+        self.image_size = image_size
+
+    def __getitem__(self, index):
+        ret = {}
+        file_name = self.img_paths[index]
+        gt_file_name = self.gt_paths[index]
+        img = self.loader(file_name)
+        gt = self.loader(gt_file_name)
+        if self.phase == 'train':
+            img, gt = self.aug(img, gt)
+        img = self.tfs(img)
+        gt = self.tfs(gt)
+        ret['gt_image'] = gt
+        ret['cond_image'] = img
+        ret['path'] = '_'.join(file_name.split('/')[-3:])
+        if self.phase != 'train':
+            # print(int(file_name.split('/')[-2].split('_')[-1]))
+            ret['noise_level'] = torch.tensor([int(file_name.split('/')[-2].split('_')[-1])])
+        return ret
+
+    def __len__(self):
+        return len(self.img_paths)
+
+    def aug(self, img, gt):
+        if random.random() < 0.5:
+            img = ImageOps.flip(img)
+            gt = ImageOps.flip(gt)
+        if random.random() < 0.5:
+            img = img.rotate(90)
+            gt = gt.rotate(90)
+        if random.random() < 0.5:
+            img = img.filter(ImageFilter.GaussianBlur(radius=3))
+        return img, gt
+
+    def read_dataset(self, data_root):
+        import os
+        img_paths = []
+        gt_paths = []
+        for cell_num in os.listdir(data_root):
+            cell_path = os.path.join(data_root, cell_num)
+            if self.phase == 'train':  # train
+                for noise_level in os.listdir(cell_path):
+                    for img in sorted(os.listdir(os.path.join(cell_path, noise_level))):
+                        if 'tif' in img:
+                            img_paths.append(os.path.join(cell_path,noise_level, img))
+                            gt_paths.append(os.path.join(cell_path, noise_level, img).replace('wf', 'gt'))
+            else:  # test
+                for img in sorted(os.listdir(cell_path)):
+                    img_paths.append(os.path.join(cell_path, img))
+                    gt_paths.append(os.path.join(cell_path, img))  # put the wf image into the gt_paths
+        return img_paths, gt_paths
+
+
+class vEMDiffuseTrainingDatasetPatches(
+    data.Dataset):  # Dataset for vEMDiffuse training using the downloaded subvolume
+    def __init__(self, data_root, data_len=-1, norm=True, percent=False, phase='train', image_size=[256, 256],
+                 method='vEMDiffuse-i',
+                 z_times=6, loader=pil_loader_noL):
+        self.data_root = data_root
+        print('in dataset:', self.data_root)
+        self.phase = phase
+        print(phase)
+        self.z_times = z_times
+        self.gt_paths, self.max_nums = self.read_dataset(self.data_root)
+        print('dataset norm:', norm)
+        self.percent = percent
+        print('dataset percent:', percent)
+        self.tfs = transforms.Compose([
+            transforms.Resize((image_size[0], image_size[1])),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.5], std=[0.5])
+        ])
+        self.loader = loader
+        self.norm = norm
+        self.image_size = image_size
+
+
+    def __getitem__(self, index):
+        ret = {}
+        # sub_volume_index = random.randint(0, len(self.gt_paths) - 1)
+
+        gt_file_name = self.gt_paths[index]
+        upper_bound = self.z_times // 2
+        lower_bound = self.z_times // 2 if self.z_times // 2 == 0 else self.z_times // 2 + 1
+        file_index = random.randint(upper_bound, self.max_nums[index] - lower_bound)
+        gt_file_name = os.path.join(gt_file_name, str(file_index) + '.tif')
+        img_up = self.loader(os.path.join(os.path.dirname(gt_file_name), str(file_index - upper_bound) + '.tif'))
+        img_below = self.loader(os.path.join(os.path.dirname(gt_file_name), str(file_index + lower_bound) + '.tif'))
+        gts = []
+        for i in range(file_index - upper_bound + 1, file_index + lower_bound):
+            gts.append(self.loader(os.path.join(os.path.dirname(gt_file_name), str(i) + '.tif')))
+        img_up, img_below, gts = self.aug(img_up, img_below, gts)
+        img_up = self.tfs(img_up)
+        img_below = self.tfs(img_below)
+        out_gts = []
+        for i in range(len(gts)):
+            gt_tmp = self.tfs(gts[i])
+            out_gts.append(gt_tmp)
+        img = torch.cat([img_below, img_up], dim=0)
+        gt = torch.cat(out_gts, dim=0)
+        ret['gt_image'] = gt
+        ret['cond_image'] = img
+        # print(img.shape)
+        ret['path'] = '_'.join(gt_file_name.split('/')[-3:])
+        # print(ret['path'])
+        return ret
+
+    def __len__(self):
+        return len(self.gt_paths)
+
+    def aug(self, img_up, img_below, gts):
+        if random.random() < 0.5:
+            img_up = img_up.filter(ImageFilter.GaussianBlur(radius=3))
+        if random.random() < 0.5:
+            img_below = img_below.filter(ImageFilter.GaussianBlur(radius=3))
+        if random.random() < 0.5:
+            img_up = ImageOps.flip(img_up)
+            img_below = ImageOps.flip(img_below)
+            for i in range(len(gts)):
+                gt_tmp = ImageOps.flip(gts[i])
+                gts[i] = gt_tmp
+        if random.random() < 0.5:
+            img_up = img_up.rotate(90)
+            img_below = img_below.rotate(90)
+            for i in range(len(gts)):
+                gt_tmp = gts[i].rotate(90)
+                gts[i] = gt_tmp
+        return img_up, img_below, gts
+
+    def read_dataset(self, data_root):
+        gt_paths = []  # subfolder
+        max_nums = []  # z_depth in subfolder
+        for cell_num in os.listdir(data_root):
+            cell_path = os.path.join(data_root, cell_num)
+            gt_paths.append(os.path.join(cell_path))
+            max_nums.append(find_max_number(os.path.join(cell_path)))
+        return gt_paths, max_nums
+
+
+class vEMDiffuseTrainingDatasetVolume(data.Dataset):  # Dataset for vEMDiffuse training using the whole isotropic volume
+    def __init__(self, data_root, data_len=-1, norm=True, percent=False, phase='train', image_size=[256, 256],
+                 method='vEMDiffuse-i',
+                 z_times=6, loader=pil_loader_noL):
+        self.data_root = data_root
+        print('in dataset:', self.data_root)
+        self.phase = phase
+        print(phase)
+        self.z_times = z_times
+        self.method = method
+        self.volume = self.read_dataset(self.data_root)
+        print('dataset norm:', norm)
+        self.percent = percent
+        print('dataset percent:', percent)
+        self.tfs = transforms.Compose([
+            transforms.Resize((image_size[0], image_size[1])),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.5], std=[0.5])
+        ])
+        self.loader = loader
+        self.norm = norm
+        self.image_size = image_size
+
+
+    def __getitem__(self, index):
+        ret = {}
+        z, y, x = self.volume.shape
+
+        # y_index = random.randint(7, se - 6)
+        x_index = random.randint(0, x - self.image_size[0])
+        y_index = random.randint(0, y - self.image_size[1])
+        upper_bound = self.z_times // 2
+        lower_bound = self.z_times // 2 if self.z_times // 2 == 0 else self.z_times // 2 + 1
+        z_index = random.randint(upper_bound, z - lower_bound - 1)
+        img_up = Image.fromarray(self.volume[z_index - upper_bound, y_index:y_index + self.image_size[1],
+                                 x_index:x_index + self.image_size[0]])
+        img_below = Image.fromarray(self.volume[z_index + lower_bound, y_index:y_index + self.image_size[1],
+                                    x_index:x_index + self.image_size[0]])
+        # print(img_up.shape)
+        gts = []
+        for i in range(z_index - upper_bound + 1, z_index + lower_bound):
+            gts.append(Image.fromarray(
+                self.volume[i, y_index:y_index + self.image_size[1], x_index:x_index + self.image_size[0]]))
+        img_up, img_below, gts = self.aug(img_up, img_below, gts)
+        img_up = self.tfs(img_up)
+        img_below = self.tfs(img_below)
+        out_gts = []
+        for i in range(len(gts)):
+            gt_tmp = self.tfs(gts[i])
+            out_gts.append(gt_tmp)
+        img = torch.cat([img_below, img_up], dim=0)
+        gt = torch.cat(out_gts, dim=0)
+        ret['gt_image'] = gt
+        ret['cond_image'] = img
+        # print(img.shape)
+        ret['path'] = str(y_index) + '_' + str(x_index) + '_' + str(z_index) + '.tif'
+        # print(ret['path'])
+        return ret
+
+    def __len__(self):
+        if self.phase == 'train':
+            return 20000
+
+    def aug(self, img_up, img_below, gts):
+        if random.random() < 0.5:
+            img_up = img_up.filter(ImageFilter.GaussianBlur(radius=3))
+        if random.random() < 0.5:
+            img_below = img_below.filter(ImageFilter.GaussianBlur(radius=3))
+        if random.random() < 0.5:
+            img_up = ImageOps.flip(img_up)
+            img_below = ImageOps.flip(img_below)
+            for i in range(len(gts)):
+                gt_tmp = ImageOps.flip(gts[i])
+                gts[i] = gt_tmp
+        if random.random() < 0.5:
+            img_up = img_up.rotate(90)
+            img_below = img_below.rotate(90)
+            for i in range(len(gts)):
+                gt_tmp = gts[i].rotate(90)
+                gts[i] = gt_tmp
+        return img_up, img_below, gts
+
+    def read_dataset(self, data_root):
+        stacks = []
+        z_depth = find_max_number(data_root)
+
+        for i in range(z_depth):
+            stacks.append(imread(os.path.join(data_root, f'{i}.tif')))
+        stack = np.stack(stacks)
+        print(stack.shape)
+        if self.method == 'vEMDiffuse-a':
+            # transpose z and y
+            stack = stack.transpose(1, 0, 2)
+
+        return stack
+
+
+class vEMDiffuseTestIsotropic(data.Dataset):  # dataset for testing vEMDiffuse-i. Given an isotropic volume, first downsample it and then reconstruct it.
+    def __init__(self, data_root, data_len=-1, norm=True, percent=False, phase='train', image_size=[256, 256], z_times=6,
+                 loader=pil_loader):
+        self.data_root = data_root
+        print('in dataset:', self.data_root)
+        self.phase = phase
+        self.z_times = z_times
+        print(phase)
+        self.gt_paths = self.read_dataset(self.data_root)
+        print('dataset norm:', norm)
+        self.percent = percent
+        print('dataset percent:', percent)
+
+        self.tfs = transforms.Compose([
+            transforms.Resize((image_size[0], image_size[1])),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.5], std=[0.5])
+        ])
+        self.loader = loader
+        self.norm = norm
+        self.image_size = image_size
+
+
+    def __getitem__(self, index):
+        ret = {}
+        gt_file_name = self.gt_paths[index]
+        # print(gt_file_name)
+        file_index = int(gt_file_name.split('/')[-2])
+        upper_bound = self.z_times // 2
+        lower_bound = self.z_times // 2 if self.z_times % 2 == 0 else self.z_times // 2 + 1
+        img_up = self.loader(os.path.join(self.data_root, str(file_index - upper_bound), gt_file_name.split('/')[-1]))
+        img_below = self.loader(
+            os.path.join(self.data_root, str(file_index + lower_bound), gt_file_name.split('/')[-1]))
+        gts = []
+        for i in range(file_index - upper_bound + 1, file_index + lower_bound):
+            gts.append(self.loader(os.path.join(self.data_root, str(i), gt_file_name.split('/')[-1])))
+        img_up = self.tfs(img_up)
+        img_below = self.tfs(img_below)
+        out_gts = []
+        for i in range(len(gts)):
+            gt_tmp = self.tfs(gts[i])
+            out_gts.append(gt_tmp)
+        img = torch.cat([img_below, img_up], dim=0)
+        gt = torch.cat(out_gts, dim=0)
+        ret['gt_image'] = gt
+        ret['cond_image'] = img
+        # print(img.shape)
+        ret['path'] = '_'.join(gt_file_name.split('/')[-3:])
+        # print(ret['path'])
+        return ret
+
+    def __len__(self):
+        return len(self.gt_paths)
+
+    def read_dataset(self, data_root):
+        import os
+        z_depth = find_max_number(data_root)
+        print(z_depth)
+        upper_bound = self.z_times // 2
+        lower_bound = self.z_times // 2 if self.z_times % 2 == 0 else self.z_times // 2 + 1
+        gt_paths = []
+        for i in range(upper_bound, z_depth - lower_bound, self.z_times):  # Downsample
+
+            for file in os.listdir(os.path.join(data_root, str(i))):
+                gt_paths.append(os.path.join(data_root, str(i), file))
+                # below_paths.append(os.path.join(data_root, str(i + 1), file))
+        return gt_paths
+
+
+class vEMDiffuseTestAnIsotropic(
+    data.Dataset):  # dataset for testing vEMDiffuse-i. Given an anisotropic volume, reconstruct it.
+    def __init__(self, data_root, data_len=-1, norm=True, percent=False, phase='train', image_size=[256, 256],
+                 z_times=6,
+                 loader=pil_loader):
+        self.data_root = data_root
+        print('in dataset:', self.data_root)
+        self.phase = phase
+        print(phase)
+        self.z_times = z_times
+        self.gt_paths, self.below_paths = self.read_dataset(self.data_root)
+        print('dataset norm:', norm)
+        self.percent = percent
+        print('dataset percent:', percent)
+
+        self.tfs = transforms.Compose([
+            transforms.Resize((image_size[0], image_size[1])),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.5], std=[0.5])
+        ])
+        self.loader = loader
+        self.norm = norm
+        self.image_size = image_size
+
+
+    def __getitem__(self, index):
+        ret = {}
+        gt_file_name = self.gt_paths[index]
+        img_up = self.loader(gt_file_name)
+        img_below = self.loader(self.below_paths[index])
+        gts = []
+        for _ in range(self.z_times - 1):
+            gt = self.loader(gt_file_name)
+            gts.append(gt)
+        gts = []
+        for i in range(self.z_times - 1):
+            gts.append(self.loader(gt_file_name))
+        img_up = self.tfs(img_up)
+        img_below = self.tfs(img_below)
+        out_gts = []
+        for i in range(len(gts)):
+            gt_tmp = self.tfs(gts[i])
+            out_gts.append(gt_tmp)
+        img = torch.cat([img_below, img_up], dim=0)
+        gt = torch.cat(out_gts, dim=0)
+        ret['gt_image'] = gt
+        ret['cond_image'] = img
+        # print(img.shape)
+        ret['path'] = '_'.join(gt_file_name.split('/')[-3:])
+        # print(ret['path'])
+        return ret
+
+    def __len__(self):
+        return len(self.gt_paths)
+
+    def read_dataset(self, data_root):
+        import os
+        z_depth = find_max_number(data_root)
+        gt_paths = []
+        below_paths = []
+        for i in range(0, z_depth - 1):
+            for file in os.listdir(os.path.join(data_root, str(i))):
+                gt_paths.append(os.path.join(data_root, str(i), file))
+                below_paths.append(os.path.join(data_root, str(i + 1), file))
+                # below_paths.append(os.path.join(data_root, str(i + 1), file))
+        return gt_paths, below_paths
