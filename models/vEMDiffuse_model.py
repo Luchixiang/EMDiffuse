@@ -187,6 +187,7 @@ class DiReP(BaseModel):
                                                                      path=self.path)
                     mean_outputs.append(output)
                 self.output = torch.stack(mean_outputs, dim=0).mean(dim=0)
+                self.model_uncertainty = torch.stack(mean_outputs, dim=0).mean(dim=0)
                 self.iter += self.batch_size
                 self.writer.set_iter(self.epoch, self.iter, phase='test')
                 for met in self.metrics:
