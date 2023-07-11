@@ -10,7 +10,7 @@ Several representative model weight has been uploaded in: [EMDiffuse_model_weigh
 
 You can also visit our webpage for more information: https://www.haibojianglab.com/emdiffuse. 
 
-Please feel free to contact our if you have any questions about the code.
+Please feel free to contact us if you have any questions about the code.
 
 
 
@@ -120,11 +120,7 @@ python test_pre.py --path /data/EMDiffuse_dataset/brain_test --task super
 python run.py -p test -c config/EMDiffuse-n.json -g 0 -b 60 --path /data/EMDiffuse_dataset/brain_test/super_test_crop_patches
 ```
 
-
-
-
-
-### EMDiffuse-n and EMDiffuse-r For your own EM dataset
+## EMDiffuse-n and EMDiffuse-r For your own EM dataset
 
 **Note that all the above steps are designed for our multiple noise level denoising and super-resolution datasets. If you want to try your own dataset, you may need to modify the crop and register codes to meet the format of your dataset. We provide a demo for you to implement inference on a more simpler dataset with the file strucutre:**
 
@@ -178,7 +174,7 @@ Where parameter ``-z`` means the number of layers you want the model learn to ge
  python run.py -c config/vEMDiffuse-a.json -b 16 -gpu 0,1,2,3 --port 20022 --path ./Vem_data/transposed -z 5
  ```
 
-#### Testing vEMDiffuse-a
+### Testing 
 
 Firstly, you need to have an anisotropic volume with data structure:
 
