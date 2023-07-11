@@ -44,7 +44,7 @@
           "percent": false,
           "z_times": 10,
           "method": "vEMDiffuse-a",
-          "image_size": [128, 128]
+          "image_size": [256, 256]
         }
       },
       "dataloader": {

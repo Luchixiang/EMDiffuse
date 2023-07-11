@@ -1,0 +1,12 @@
+torch==1.13.0
+torchvision==0.14.0
+matplotlib
+tensorboard
+scipy
+tifffile
+opencv-python
+pandas
+imutils
+image_registration
+numpy==1.23.0
+pytest

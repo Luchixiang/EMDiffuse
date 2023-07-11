@@ -1,13 +1,14 @@
-import torch
-import tqdm
-from core.base_model import BaseModel
-from core.logger import LogTracker
 import copy
 import os
-import shutil
+
+import torch
 import torch.nn as nn
+import tqdm
+
 import core.util as Util
-from warmup_scheduler import GradualWarmupScheduler
+from core.base_model import BaseModel
+from core.logger import LogTracker
+
 
 class EMA():
     def __init__(self, beta=0.9999):

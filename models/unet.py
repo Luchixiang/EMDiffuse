@@ -1,12 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.autograd import Variable
-from collections import OrderedDict
 from torch.nn import init
-import numpy as np
-import segmentation_models_pytorch as smp
-import torchvision.models
 
 
 def conv3x3(in_channels, out_channels, stride=1,
@@ -114,8 +109,6 @@ class UpConv(nn.Module):
         x = F.relu(self.conv2(x))
         return x
 
-
-from torch.autograd import Variable
 
 class AutoEncoder(nn.Module):
     """ `UNet` class is based on https://arxiv.org/abs/1505.04597

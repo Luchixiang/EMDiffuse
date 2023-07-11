@@ -6,7 +6,6 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 from torchvision.utils import make_grid
 import os
 import cv2
-import pyiqa
 
 
 def tensor2img(tensor, out_type=np.uint8, min_max=(-1, 1), norm=True):

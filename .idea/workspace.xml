@@ -2,10 +2,73 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2db1b2b-8d0f-4b38-a416-8f030a04cdeb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/RAFT.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/alt_cuda_corr/correlation.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/alt_cuda_corr/correlation_kernel.cu" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/alt_cuda_corr/setup.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/chairs_split.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/align_functions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/corr.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/datasets.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/extractor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/optical_flow_registration.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/raft.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/register.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/super-res-register.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/update.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/utils/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/utils/augmentor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/utils/flow_viz.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/utils/frame_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/utils/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/demo-frames/frame_0016.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/demo-frames/frame_0017.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/demo-frames/frame_0018.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/demo-frames/frame_0019.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/demo-frames/frame_0020.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/demo-frames/frame_0021.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/demo-frames/frame_0022.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/demo-frames/frame_0023.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/demo-frames/frame_0024.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/demo-frames/frame_0025.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/demo.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/download_models.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/evaluate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/train.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/train_mixed.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/train_standard.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/crop_single_file.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirments.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vEMa_pre.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/EMDiffuse-n-un.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/vEMDiffuse-a.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/vEMDiffuse-a.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/vEMDiffuse-i-aleatoric.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/vEMDiffuse-i.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/vEMDiffuse-i.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/praser.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/praser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/util.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/util.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/denoise_pre.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_pre.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/EMDiffuse_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/EMDiffuse_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/EMDiffuse_model_aleatoric.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/EMDiffuse_network_aleatoric.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/metric.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/metric.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/sr3_modules/unet.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/unet.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/unet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/vEMDiffuse_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/vEMDiffuse_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/vEMDiffuse_model_aleatoric.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/vEMDiffuse_network.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/vEMDiffuse_network.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/vEMDiffuse_network_aleatoric.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/probability.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vEM_test_pre.py" beforeDir="false" afterPath="$PROJECT_DIR$/vEM_test_pre.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -89,7 +152,8 @@
       <workItem from="1682248743507" duration="12546000" />
       <workItem from="1682397948283" duration="13375000" />
       <workItem from="1682431855217" duration="452000" />
-      <workItem from="1682477565328" duration="9416000" />
+      <workItem from="1682477565328" duration="9595000" />
+      <workItem from="1688956075461" duration="19357000" />
     </task>
     <servers />
   </component>
@@ -101,7 +165,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

@@ -1,20 +1,13 @@
-import torch.utils.data as data
-from torchvision import transforms
-import torchvision.transforms.functional as TF
-from PIL import Image, ImageOps
 import os
-import torch
-import numpy as np
-import torchvision.transforms.functional as TF
 import random
-import torch
-from PIL import Image, ImageFilter
-from tifffile import imread
-import copy
-import glob
 
-from .util.mask import (bbox2mask, brush_stroke_mask, get_irregular_mask, random_bbox, random_cropping_bbox)
+import torch
 import torch.multiprocessing
+import torch.utils.data as data
+from PIL import Image, ImageFilter
+from PIL import ImageOps
+from tifffile import imread
+from torchvision import transforms
 
 
 def find_max_number(folder_path):
@@ -99,16 +92,11 @@ class EMDiffusenDataset(data.Dataset):  # Denoise and super-resolution Dataset
         gt_paths = []
         for cell_num in os.listdir(data_root):
             cell_path = os.path.join(data_root, cell_num)
-            if self.phase == 'train':  # train
-                for noise_level in os.listdir(cell_path):
-                    for img in sorted(os.listdir(os.path.join(cell_path, noise_level))):
-                        if 'tif' in img:
-                            img_paths.append(os.path.join(cell_path,noise_level, img))
-                            gt_paths.append(os.path.join(cell_path, noise_level, img).replace('wf', 'gt'))
-            else:  # test
-                for img in sorted(os.listdir(cell_path)):
-                    img_paths.append(os.path.join(cell_path, img))
-                    gt_paths.append(os.path.join(cell_path, img))  # put the wf image into the gt_paths
+            for noise_level in os.listdir(cell_path):
+                for img in sorted(os.listdir(os.path.join(cell_path, noise_level))):
+                    if 'tif' in img:
+                        img_paths.append(os.path.join(cell_path, noise_level, img))
+                        gt_paths.append(os.path.join(cell_path, noise_level, img).replace('wf', 'gt'))
         return img_paths, gt_paths
 
 
@@ -208,7 +196,6 @@ class vEMDiffuseTrainingDatasetVolume(data.Dataset):  # Dataset for vEMDiffuse t
         print(phase)
         self.z_times = z_times
         self.method = method
-        self.volume = self.read_dataset(self.data_root)
         print('dataset norm:', norm)
         self.percent = percent
         print('dataset percent:', percent)
@@ -217,30 +204,31 @@ class vEMDiffuseTrainingDatasetVolume(data.Dataset):  # Dataset for vEMDiffuse t
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.5], std=[0.5])
         ])
+        self.depth = find_max_number(self.data_root)
+        self.height, self.width = imread(os.path.join(data_root, str(self.depth) + '.tif')).shape
         self.loader = loader
         self.norm = norm
         self.image_size = image_size
 
-
     def __getitem__(self, index):
         ret = {}
-        z, y, x = self.volume.shape
 
         # y_index = random.randint(7, se - 6)
-        x_index = random.randint(0, x - self.image_size[0])
-        y_index = random.randint(0, y - self.image_size[1])
+        x_index = random.randint(0, self.width - self.image_size[0])
+        y_index = random.randint(0, self.height - self.image_size[1])
         upper_bound = self.z_times // 2
         lower_bound = self.z_times // 2 if self.z_times // 2 == 0 else self.z_times // 2 + 1
-        z_index = random.randint(upper_bound, z - lower_bound - 1)
-        img_up = Image.fromarray(self.volume[z_index - upper_bound, y_index:y_index + self.image_size[1],
+        z_index = random.randint(upper_bound, self.depth - lower_bound - 1)
+
+        img_up = Image.fromarray(imread(os.path.join(self.data_root, str(z_index - upper_bound) + '.tif'))[y_index:y_index + self.image_size[1],
                                  x_index:x_index + self.image_size[0]])
-        img_below = Image.fromarray(self.volume[z_index + lower_bound, y_index:y_index + self.image_size[1],
+        img_below = Image.fromarray(imread(os.path.join(self.data_root, str(z_index - upper_bound) + '.tif'))[ y_index:y_index + self.image_size[1],
                                     x_index:x_index + self.image_size[0]])
         # print(img_up.shape)
         gts = []
         for i in range(z_index - upper_bound + 1, z_index + lower_bound):
             gts.append(Image.fromarray(
-                self.volume[i, y_index:y_index + self.image_size[1], x_index:x_index + self.image_size[0]]))
+                imread(os.path.join(self.data_root, str(i) + '.tif'))[y_index:y_index + self.image_size[1], x_index:x_index + self.image_size[0]]))
         img_up, img_below, gts = self.aug(img_up, img_below, gts)
         img_up = self.tfs(img_up)
         img_below = self.tfs(img_below)
@@ -280,19 +268,6 @@ class vEMDiffuseTrainingDatasetVolume(data.Dataset):  # Dataset for vEMDiffuse t
                 gts[i] = gt_tmp
         return img_up, img_below, gts
 
-    def read_dataset(self, data_root):
-        stacks = []
-        z_depth = find_max_number(data_root)
-
-        for i in range(z_depth):
-            stacks.append(imread(os.path.join(data_root, f'{i}.tif')))
-        stack = np.stack(stacks)
-        print(stack.shape)
-        if self.method == 'vEMDiffuse-a':
-            # transpose z and y
-            stack = stack.transpose(1, 0, 2)
-
-        return stack
 
 
 class vEMDiffuseTestIsotropic(data.Dataset):  # dataset for testing vEMDiffuse-i. Given an isotropic volume, first downsample it and then reconstruct it.

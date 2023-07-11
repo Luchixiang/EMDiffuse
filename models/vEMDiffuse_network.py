@@ -1,11 +1,12 @@
 import math
-import torch
-from inspect import isfunction
 from functools import partial
+from inspect import isfunction
+
 import numpy as np
+import torch
 from tqdm import tqdm
+
 from core.base_network import BaseNetwork
-from einops import rearrange
 
 
 class Network(BaseNetwork):

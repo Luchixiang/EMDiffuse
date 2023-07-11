@@ -106,8 +106,8 @@ class DiReP(BaseModel):
 
             ret_path.append('Input_{}'.format(self.path[idx]))
             ret_result.append(self.cond_image[idx].detach().float().cpu())
-            ret_path.append('Model_Varaiance_{}'.format(self.path[idx]))
-            ret_result.append(self.model_uncertainty[idx].detach().float().cpu())
+            # ret_path.append('Model_Varaiance_{}'.format(self.path[idx]))
+            # ret_result.append(self.model_uncertainty[idx].detach().float().cpu())
 
         self.results_dict = self.results_dict._replace(name=ret_path, result=ret_result)
         return self.results_dict._asdict()
@@ -166,18 +166,6 @@ class DiReP(BaseModel):
                 self.writer.save_images(self.save_current_results(), norm=self.opt['norm'])
 
         return self.val_metrics.result()
-    def dynamic_mean(self):
-        repeat_indices = self.repeat_num.cumsum(0).squeeze(dim=1). long()
-        repeat_indices = repeat_indices.roll(shifts=1, dims=0)
-        repeat_indices[0] = 0
-        mean_outputs = []
-        model_uncertainties = []
-        for start, end in zip(repeat_indices, repeat_indices[1:].tolist() + [self.output.size(0)]):
-            mean_output = self.output[start:end].mean(dim=0, keepdim=True)  # shape [1, output_features]
-            uncertainty = self.output[start:end].std(dim=0, keepdim=True)
-            mean_outputs.append(mean_output)
-        self.output = torch.cat(mean_outputs, dim=0)  # shape [b, output_features]
-        self.model_uncertainty = torch.cat(model_uncertainties, dim=0)
 
     def model_test(self, sample_num):
         if self.opt['distributed']:
@@ -193,25 +181,13 @@ class DiReP(BaseModel):
         self.test_metrics.reset()
         with torch.no_grad():
             for phase_data in self.phase_loader:
-                if self.mean == -1: # dymaic mean
-                    phase_data['cond_image'] = phase_data['cond_image'].repeat_interleave(phase_data['noise_level'].squeeze(dim=1), dim=0)
-                    self.set_input(phase_data)
-                    # self.cond_image = self.cond_image.repeat_interleave(self.repeat_num.cuda(), dim=0)
-                    self.output = self.model_test(self.sample_num)
-                    self.dynamic_mean()
-                else:
-                    self.set_input(phase_data)
-                    mean_outputs = []
-                    for i in range(self.mean):
-                        output = self.model_test(self.sample_num)
-                        mean_outputs.append(output)
-                    self.output = torch.stack(mean_outputs, dim=0).mean(dim=0)
-                    if self.mean == 1: # can't calculate the model uncertainty
-                        mean_outputs_low = []
-                        for i in range(4):
-                            output = self.model_test(self.sample_num // 2)
-                            mean_outputs_low.append(output)
-                    self.model_uncertainty = torch.stack(mean_outputs_low, dim=0).std(dim=0)
+                self.set_input(phase_data)
+                mean_outputs = []
+                for i in range(self.mean):
+                    output = self.model_test(self.sample_num)
+                    mean_outputs.append(output)
+                self.output = torch.stack(mean_outputs, dim=0).mean(dim=0)
+                self.model_uncertainty = torch.stack(mean_outputs, dim=0).std(dim=0)
                 self.iter += self.batch_size
                 self.writer.set_iter(self.epoch, self.iter, phase='test')
                 for met in self.metrics:

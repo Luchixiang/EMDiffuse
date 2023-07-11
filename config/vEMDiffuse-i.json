@@ -33,7 +33,7 @@
                 // import designated dataset using arguments
                 "name": [
                     "data.dataset",
-                    "vEMDiffuseTrainingDatasetPatches"
+                    "vEMDiffuseTrainingDatasetVolume"
                 ],
                 // import Dataset() class / function(not recommend) from data.dataset.py (default is [data.dataset.py])
                 "args": {

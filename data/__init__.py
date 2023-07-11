@@ -7,7 +7,6 @@ from torch.utils.data import DataLoader, Subset
 
 import core.util as Util
 from core.praser import init_obj
-from denoise_pre import denoise_pre
 from vEM_test_pre import recon_pre
 
 
@@ -42,9 +41,7 @@ def define_dataset(logger, opt):
     ''' loading Dataset() class from given file's name '''
     dataset_opt = opt['datasets'][opt['phase']]['which_dataset']
     if opt['phase'] != 'train':
-        if opt['task'] == 'denoise':
-            dataset_opt['args']['data_root'] = denoise_pre(dataset_opt['args']['data_root'])
-        else:
+        if opt['task'] == '3d_reconstruction':
             dataset_opt['args']['data_root'] = recon_pre(dataset_opt['args']['data_root'])
 
     phase_dataset = init_obj(dataset_opt, logger, default_file_name='data.dataset', init_type='Dataset')

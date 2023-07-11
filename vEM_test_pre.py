@@ -26,14 +26,11 @@ def recon_pre(root_path):
         path_size = 256
         stride = 224
         img = imread(os.path.join(root_path, file))
-        # img = prctile_norm(img, 108., 156.)
-        # img = img.astype(np.uint8)
         col_num = 0
         os.makedirs(os.path.join(target_path, index))
         while x + path_size <= img.shape[0]:
             y = 0
             row_num = 0
-
             x_start = x
             while y + path_size <= img.shape[1]:
                 y_start = y
@@ -45,3 +42,4 @@ def recon_pre(root_path):
             x += stride
             col_num += 1
     return os.path.join(root_path, 'crop_patches')
+

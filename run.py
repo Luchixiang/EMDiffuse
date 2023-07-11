@@ -9,7 +9,6 @@ import core.praser as Praser
 import core.util as Util
 from data import define_dataloader
 from models import create_model, define_network, define_loss, define_metric
-from denoise_pre import denoise_pre
 
 def main_worker(gpu, ngpus_per_node, opt):
     """  threads running on each GPU """
@@ -65,13 +64,15 @@ def main_worker(gpu, ngpus_per_node, opt):
         
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--config', type=str, default='config/colorization_mirflickr25k.json', help='JSON file for configuration')
+    parser.add_argument('-c', '--config', type=str, default='config/EMDiffuse-n.json', help='JSON file for configuration')
+    parser.add_argument('--path', type=str, default='/data/EMDiffuse/denoise', help='patch of cropped patches')
     parser.add_argument('-p', '--phase', type=str, choices=['train','test'], help='Run train or test', default='train')
     parser.add_argument('-b', '--batch', type=int, default=None, help='Batch size in every gpu')
     parser.add_argument('-gpu', '--gpu_ids', type=str, default=None)
     parser.add_argument('-d', '--debug', action='store_true')
+    parser.add_argument('-z', '--z_times', default=None, type=int)
     parser.add_argument('-P', '--port', default='21012', type=str)
-    parser.add_argument('-mean', type=int, default=1)
+    parser.add_argument('-mean', type=int, default=2)
     # parser.add_argument('-')
 
     ''' parser configs '''
