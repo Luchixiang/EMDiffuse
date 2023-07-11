@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 ### Training:
 #### Step 1
-Download dataset from https://zenodo.org/record/8133431
+Download dataset from https://zenodo.org/record/8136295
 #### Step 2
 Register the image. This step automatically register and crop the patch for model training. 
 
@@ -57,7 +57,7 @@ The model weight will be saved in experiments.
 
 #### Step 1
 
-Download dataset from https://zenodo.org/record/8133431
+Download dataset from https://zenodo.org/record/8136295
 
 #### Step 2
 
@@ -81,7 +81,7 @@ python run.py -p test -c config/EMDiffuse-n.json -g 0 -b 60 --path /data/EMDiffu
 
 #### Step 1
 
-Download dataset from https://zenodo.org/record/8133431. Please skip this step if you already downloaded the dataset in EMDiffuse-n step 1. 
+Download dataset from https://zenodo.org/record/8136295
 
 #### Step 2
 
@@ -104,7 +104,7 @@ python run.py -c config/EMDiffuse-n.json -b 16 -gpu 0,1,2,3 --port 20022 --path 
 
 #### Step 1
 
-Download dataset from https://zenodo.org/record/8133431
+Download dataset from https://zenodo.org/record/8136295
 
 #### Step 2
 

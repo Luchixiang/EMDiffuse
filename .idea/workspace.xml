@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b2db1b2b-8d0f-4b38-a416-8f030a04cdeb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RAFT/core/register.py" beforeDir="false" afterPath="$PROJECT_DIR$/RAFT/core/register.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -87,7 +89,7 @@
       <workItem from="1682397948283" duration="13375000" />
       <workItem from="1682431855217" duration="452000" />
       <workItem from="1682477565328" duration="9595000" />
-      <workItem from="1688956075461" duration="19947000" />
+      <workItem from="1688956075461" duration="20013000" />
     </task>
     <servers />
   </component>

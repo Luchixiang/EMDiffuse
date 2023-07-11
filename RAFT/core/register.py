@@ -271,7 +271,7 @@ def registration(args):
         train_gt_path = os.path.join(target_path, 'train_gt')
         mkdir(train_wf_path)
         mkdir(train_gt_path)
-        for i in range(100):
+        for i in range(2, 100):
             if not os.path.exists(os.path.join(path, str(i), tissue +'__4w_09.tif')):
                 continue
             roi_wf_path = os.path.join(train_wf_path, str(i))
@@ -289,7 +289,7 @@ def registration(args):
                 gt_file_img = cv2.imread(os.path.join(path, str(i), tissue +'__4w_09.tif'))
                 wf_file_img = cv2.imread(os.path.join(path, str(i), type))
                 sup_wf_img = None
-                if '_04' in type or '05' in type:
+                if '_04' in type or '05' in type and tissue == 'brain':
                     sup_wf_img = cv2.imread(os.path.join(path, str(i), tissue +'__4w_06.tif'))
                 # print(wf_file_img.min())
                 process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path, sup_wf_img=sup_wf_img, model=model)
