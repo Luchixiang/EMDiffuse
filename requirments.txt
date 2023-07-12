@@ -10,3 +10,4 @@ imutils
 image_registration
 numpy==1.23.0
 pytest
+warmup_scheduler

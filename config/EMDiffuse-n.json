@@ -12,7 +12,7 @@
         "tb_logger": "tb_logger", // path of tensorboard logger
         "results": "results",
         "checkpoint": "checkpoint",
-        "resume_state": "experiments/emdiffusie-n/2720" // checkpoint path, set to null if used for training
+//        "resume_state": "experiments/emdiffusie-n/2720" // checkpoint path, set to null if used for training
 //        "resume_state": null // checkpoint path, set to null if used for training
     },
     "datasets": { // train or test

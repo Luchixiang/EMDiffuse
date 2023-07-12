@@ -4,7 +4,7 @@ This repository is the official Pytorch implementation of our paper: **EMDiffuse
 
 EMDiffuse is a package for the application of diffusion models on electron microscopy images, aiming to enhance EM ultrastructural imaging and expand the realm of vEM capabilities. Here, we adopted the diffusion model for EM applications and developed **EMDiffuse-n** for EM denoising, **EMDiffuse-r** for EM super-resolution, and **vEMDiffuse-i** and **vEMDiffuse-a** for generating isotropic resolution data from anisotropic volumes for vEM. All the results including the training and inference in the following instructions will be saved in ``./experiments`` folder. Also, you should replace ``--path`` arguments in all instructions into your dataset path.
 
-Several representative model weight has been uploaded in: [EMDiffuse_model_weight](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3590540_connect_hku_hk/EtSvqrIyrNREim5dJfabx2ABMLNhwk2Z9EsJDD4w6mls8g?e=OdP4Vq).  The weight in vEMDiffuse-i was trained on [Openorgnelle liver dataset](https://doi.org/10.25378/janelia.16913047.v1). The weight in vEMDiffuse-a was trained on [MICrONS multi-area dataset](https://www.microns-explorer.org/). 
+Several representative model weight has been uploaded in: [EMDiffuse_model_weight](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3590540_connect_hku_hk/EtSvqrIyrNREim5dJfabx2ABMLNhwk2Z9EsJDD4w6mls8g?e=OdP4Vq) and place the folder in ``./experiments`` folder.  The weight in vEMDiffuse-i was trained on [Openorgnelle liver dataset](https://doi.org/10.25378/janelia.16913047.v1). The weight in vEMDiffuse-a was trained on [MICrONS multi-area dataset](https://www.microns-explorer.org/). 
 
 You can also visit our webpage for more information: https://www.haibojianglab.com/emdiffuse. 
 
@@ -46,7 +46,7 @@ For transfer learning on other tissue, please replace ``--tissue`` with the targ
 Model Training. Please change the file path in line 23 of the config file. 
 
 ```python
-python run.py -c config/EMDiffuse-n.json -b 16 -gpu 0,1,2,3 --port 20022 --path /data/EMDiffuse_dataset/brain_train/denoise
+python run.py -c config/EMDiffuse-n.json -b 16 -gpu 0,1,2,3 --port 20022 --path /data/EMDiffuse_dataset/brain_train/denoise/train_wf
 ```
 
 The model weight will be saved in experiments.
@@ -87,7 +87,7 @@ Register the image
 
 ```python
 cd RAFT/core
-python register-super-res.py --path /data/EMDiffuse_dataset/brain_train 
+python register-super-res.py --path /data/EMDiffuse_dataset/brain_train
 ```
 
 #### Step 3
@@ -95,7 +95,7 @@ python register-super-res.py --path /data/EMDiffuse_dataset/brain_train
 Model Training
 
 ```python
-python run.py -c config/EMDiffuse-n.json -b 16 -gpu 0,1,2,3 --port 20022 --path /data/EMDiffuse_dataset/brain_train/zoom
+python run.py -c config/EMDiffuse-n.json -b 16 -gpu 0,1,2,3 --port 20022 --path /data/EMDiffuse_dataset/brain_train/zoom/train_wf
 ```
 
 ### Inference
