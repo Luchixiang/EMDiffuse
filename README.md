@@ -1,12 +1,10 @@
 # EMDiffuse
 
-This repository if the official pytorch implementation of our paper: **EMDiffuse: a diffusion-based deep learning method augmenting ultrastructural imaging and volume electron microscopy**.
+This repository is the official Pytorch implementation of our paper: **EMDiffuse: a diffusion-based deep learning method augmenting ultrastructural imaging and volume electron microscopy**.
 
-EMDiffuse is a package for the application of diffusion model on electron microscopy images, aiming to enhance EM ultrastructural imaging and expand the realm of vEM capabilities. Here, we adopted the diffusion model for EM applications and developed **EMDiffuse-n** for EM denoising, **EMDiffuse-r** for EM super-resolution, and **vEMDiffuse-i** and **vEMDiffuse-a** for generating isotropic resolution data from anisotropic volumes for vEM. All the results including the training and inference in the following instructions will be saved in ``./experiments`` folder. Also you should replace ``--path`` arguments in all instructions into your dataset path.
+EMDiffuse is a package for the application of diffusion models on electron microscopy images, aiming to enhance EM ultrastructural imaging and expand the realm of vEM capabilities. Here, we adopted the diffusion model for EM applications and developed **EMDiffuse-n** for EM denoising, **EMDiffuse-r** for EM super-resolution, and **vEMDiffuse-i** and **vEMDiffuse-a** for generating isotropic resolution data from anisotropic volumes for vEM. All the results including the training and inference in the following instructions will be saved in ``./experiments`` folder. Also, you should replace ``--path`` arguments in all instructions into your dataset path.
 
-Several representative model weight has been uploaded in: [EMDiffuse_model_weight](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3590540_connect_hku_hk/EtSvqrIyrNREim5dJfabx2ABMLNhwk2Z9EsJDD4w6mls8g?e=OdP4Vq).  The weight in vEMDiffuse-i was trained on [Openorgnelle liver dataset](https://doi.org/10.25378/janelia.16913047.v1). The weight in vEMDiffuse-a was trained on 
-
-[MICrONS multi-area dataset](https://www.microns-explorer.org/). 
+Several representative model weight has been uploaded in: [EMDiffuse_model_weight](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3590540_connect_hku_hk/EtSvqrIyrNREim5dJfabx2ABMLNhwk2Z9EsJDD4w6mls8g?e=OdP4Vq).  The weight in vEMDiffuse-i was trained on [Openorgnelle liver dataset](https://doi.org/10.25378/janelia.16913047.v1). The weight in vEMDiffuse-a was trained on [MICrONS multi-area dataset](https://www.microns-explorer.org/). 
 
 You can also visit our webpage for more information: https://www.haibojianglab.com/emdiffuse. 
 
@@ -30,22 +28,22 @@ pip install -r requirements.txt
 
 ### Training:
 #### Step 1
-Download dataset from https://zenodo.org/record/8136295
+Download the dataset from https://zenodo.org/record/8136295
 #### Step 2
-Register the image. This step automatically register and crop the patch for model training. 
+Register the image. This step automatically registers and crops the patch for model training. 
 
 ```python
 cd RAFT/core
 python register.py --path /data/EMDiffuse_dataset/brain_train --tissue brain
 ```
 
-You should replace the argument  ``--path``  with the file path you stored the dataset. 
+You should replace the argument  ``--path with the file path you place the dataset. 
 
-For transfer learning on other tissue, plase replace ``--tissue`` with the target tissue such as Liver, Heart, BM. 
+For transfer learning on other tissue, please replace ``--tissue`` with the target tissue such as the liver, heart, or bone marrow. 
 
 #### Step 3
 
-Model Training. Please change the file path in line 23 of  config file. 
+Model Training. Please change the file path in line 23 of the config file. 
 
 ```python
 python run.py -c config/EMDiffuse-n.json -b 16 -gpu 0,1,2,3 --port 20022 --path /data/EMDiffuse_dataset/brain_train/denoise
@@ -57,7 +55,7 @@ The model weight will be saved in experiments.
 
 #### Step 1
 
-Download dataset from https://zenodo.org/record/8136295
+Download the dataset from https://zenodo.org/record/8136295
 
 #### Step 2
 
@@ -81,7 +79,7 @@ python run.py -p test -c config/EMDiffuse-n.json -g 0 -b 60 --path /data/EMDiffu
 
 #### Step 1
 
-Download dataset from https://zenodo.org/record/8136295
+Download the dataset from https://zenodo.org/record/8136295
 
 #### Step 2
 
@@ -104,7 +102,7 @@ python run.py -c config/EMDiffuse-n.json -b 16 -gpu 0,1,2,3 --port 20022 --path 
 
 #### Step 1
 
-Download dataset from https://zenodo.org/record/8136295
+Download the dataset from https://zenodo.org/record/8136295
 
 #### Step 2
 
@@ -122,7 +120,7 @@ python run.py -p test -c config/EMDiffuse-n.json -g 0 -b 60 --path /data/EMDiffu
 
 ## EMDiffuse-n and EMDiffuse-r For your own EM dataset
 
-**Note that all the above steps are designed for our multiple noise level denoising and super-resolution datasets. If you want to try your own dataset, you may need to modify the crop and register codes to meet the format of your dataset. We provide a demo for you to implement inference on a more simpler dataset with the file strucutre:**
+**Note that all the above steps are designed for our multiple noise level denoising and super-resolution datasets. If you want to try your own dataset, you may need to modify the crop and register codes to meet the format of your dataset. We provide a demo for you to implement inference on a simpler dataset with the file structure:**
 
 ```bash
 Test_images:
@@ -165,7 +163,7 @@ Vem_data
 python run.py -c config/vEMDiffuse-i.json -b 16 -gpu 0,1,2,3 --port 20022 --path ./Vem_data -z 5
 ```
 
-Where parameter ``-z`` means the number of layers you want the model learn to generates. For 8 nm * 8 nm * 48 nm, you should generate 5 layers to achieve 8 nm * 8 nm * 8nm voxel size.
+Where parameter ``-z`` means the number of layers you want the model to learn to generate. For 8 nm * 8 nm * 48 nm, you should generate 5 layers to achieve 8 nm * 8 nm * 8nm voxel size.
 
 ####  Training vEMDiffuse-a
 
@@ -176,7 +174,7 @@ Where parameter ``-z`` means the number of layers you want the model learn to ge
 
 ### Testing 
 
-Firstly, you need to have an anisotropic volume with data structure:
+Firstly, you need to have an anisotropic volume with a data structure:
 
 ```
 Vem_test_data
