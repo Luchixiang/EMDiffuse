@@ -224,7 +224,13 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, pa
                 crop_sup_wf_img = sub_aligned[x - board: x + patch_size + board, y - board: y + patch_size + board]
                 H_sub = align_images(crop_sup_wf_img, crop_gt_img)
             else:
-                H_sub = align_images(crop_wf_img, crop_gt_img)
+                try:
+                    H_sub = align_images(crop_wf_img, crop_gt_img)
+                except:
+                    print(f'can not align{count}, {save_wf_path}')
+                    count += 1
+                    y += stride
+                    continue
 
             if H_sub is None:
                 print(f'can not align{count}, {save_wf_path}')
