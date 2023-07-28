@@ -37,7 +37,7 @@ cd RAFT/core
 python register.py --path /data/EMDiffuse_dataset/brain_train --tissue brain
 ```
 
-You should replace the argument  ``--path with the file path you place the dataset. 
+You should replace the argument  `--path` with the file path you place the dataset. 
 
 For transfer learning on other tissue, please replace ``--tissue`` with the target tissue such as the liver, heart, or bone marrow. 
 
