@@ -174,7 +174,7 @@ Where parameter ``-z`` means the number of layers you want the model to learn to
 
 ### Testing 
 
-Firstly, you need to have an anisotropic volume with a data structure:
+Firstly, you need to have an anisotropic volume with a data structure: 
 
 ```
 Vem_test_data
@@ -182,11 +182,11 @@ Vem_test_data
 	2.tif // The second layer
 	...
 	n.tif // The nth layer
+	
 ```
 
 ```
 python run.py -p test -c config/vEMDiffuse-a.json -g 0 -b 16 --path ./Vem_test_data/ -z 5
 ```
 
-
-
+The code will automatically help to crop the patches to fit the GPU memory. You need to stitch the patches into the whole volume. 

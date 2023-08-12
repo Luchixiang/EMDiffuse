@@ -285,7 +285,7 @@ class vEMDiffuseTestIsotropic(data.Dataset):  # dataset for testing vEMDiffuse-i
         print('dataset percent:', percent)
 
         self.tfs = transforms.Compose([
-            transforms.Resize((image_size[0], image_size[1])),
+            # transforms.Resize((image_size[0], image_size[1])),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.5], std=[0.5])
         ])
@@ -356,7 +356,7 @@ class vEMDiffuseTestAnIsotropic(
         print('dataset percent:', percent)
 
         self.tfs = transforms.Compose([
-            transforms.Resize((image_size[0], image_size[1])),
+            # transforms.Resize((image_size[0], image_size[1])),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.5], std=[0.5])
         ])
