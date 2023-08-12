@@ -130,7 +130,7 @@ class vEMDiffuseTrainingDatasetPatches(
 
         gt_file_name = self.gt_paths[index]
         upper_bound = self.z_times // 2
-        lower_bound = self.z_times // 2 if self.z_times // 2 == 0 else self.z_times // 2 + 1
+        lower_bound = self.z_times // 2 if self.z_times % 2 == 0 else self.z_times // 2 + 1
         file_index = random.randint(upper_bound, self.max_nums[index] - lower_bound)
         gt_file_name = os.path.join(gt_file_name, str(file_index) + '.tif')
         img_up = self.loader(os.path.join(os.path.dirname(gt_file_name), str(file_index - upper_bound) + '.tif'))
@@ -200,11 +200,12 @@ class vEMDiffuseTrainingDatasetVolume(data.Dataset):  # Dataset for vEMDiffuse t
         self.percent = percent
         print('dataset percent:', percent)
         self.tfs = transforms.Compose([
-            transforms.Resize((image_size[0], image_size[1])),
+            # transforms.Resize((image_size[0], image_size[1])),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.5], std=[0.5])
         ])
         self.depth = find_max_number(self.data_root)
+        print('max image:', self.depth, self.z_times)
         self.height, self.width = imread(os.path.join(data_root, str(self.depth) + '.tif')).shape
         self.loader = loader
         self.norm = norm
@@ -217,7 +218,7 @@ class vEMDiffuseTrainingDatasetVolume(data.Dataset):  # Dataset for vEMDiffuse t
         x_index = random.randint(0, self.width - self.image_size[0])
         y_index = random.randint(0, self.height - self.image_size[1])
         upper_bound = self.z_times // 2
-        lower_bound = self.z_times // 2 if self.z_times // 2 == 0 else self.z_times // 2 + 1
+        lower_bound = self.z_times // 2 if self.z_times % 2 == 0 else self.z_times // 2 + 1
         z_index = random.randint(upper_bound, self.depth - lower_bound - 1)
 
         img_up = Image.fromarray(imread(os.path.join(self.data_root, str(z_index - upper_bound) + '.tif'))[y_index:y_index + self.image_size[1],
@@ -369,10 +370,6 @@ class vEMDiffuseTestAnIsotropic(
         gt_file_name = self.gt_paths[index]
         img_up = self.loader(gt_file_name)
         img_below = self.loader(self.below_paths[index])
-        gts = []
-        for _ in range(self.z_times - 1):
-            gt = self.loader(gt_file_name)
-            gts.append(gt)
         gts = []
         for i in range(self.z_times - 1):
             gts.append(self.loader(gt_file_name))
