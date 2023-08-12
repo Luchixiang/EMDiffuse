@@ -10,6 +10,10 @@ You can also visit our webpage for more information: https://www.haibojianglab.c
 
 Please feel free to contact us if you have any questions about the code.
 
+### Update:
+
+1. find some small misalginment between the published version and our local version in 'dataset' code line 221: replace // with %.  (12/08)
+
 
 
 ### Dependency
