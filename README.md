@@ -155,8 +155,8 @@ Firstly, you should download volume data from Openorganelle or use your own vEM 
 
 ```
 Vem_data
-	1.tif // The first layer
-	2.tif // The second layer
+	0.tif // The first layer
+	1.tif // The second layer
 	...
 	n.tif // The nth layer
 ```
@@ -182,8 +182,8 @@ Firstly, you need to have an anisotropic volume with a data structure:
 
 ```
 Vem_test_data
-	1.tif // The first layer
-	2.tif // The second layer
+	0.tif // The first layer
+	1.tif // The second layer
 	...
 	n.tif // The nth layer
 	
