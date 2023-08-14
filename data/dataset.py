@@ -223,7 +223,7 @@ class vEMDiffuseTrainingDatasetVolume(data.Dataset):  # Dataset for vEMDiffuse t
 
         img_up = Image.fromarray(imread(os.path.join(self.data_root, str(z_index - upper_bound) + '.tif'))[y_index:y_index + self.image_size[1],
                                  x_index:x_index + self.image_size[0]])
-        img_below = Image.fromarray(imread(os.path.join(self.data_root, str(z_index - upper_bound) + '.tif'))[ y_index:y_index + self.image_size[1],
+        img_below = Image.fromarray(imread(os.path.join(self.data_root, str(z_index + lower_bound) + '.tif'))[ y_index:y_index + self.image_size[1],
                                     x_index:x_index + self.image_size[0]])
         # print(img_up.shape)
         gts = []
@@ -396,9 +396,10 @@ class vEMDiffuseTestAnIsotropic(
         z_depth = find_max_number(data_root)
         gt_paths = []
         below_paths = []
-        for i in range(0, z_depth - 1):
+        for i in range(33, z_depth - 1):
             for file in os.listdir(os.path.join(data_root, str(i))):
-                gt_paths.append(os.path.join(data_root, str(i), file))
-                below_paths.append(os.path.join(data_root, str(i + 1), file))
+                if '2_2' in file:
+                    gt_paths.append(os.path.join(data_root, str(i), file))
+                    below_paths.append(os.path.join(data_root, str(i + 1), file))
                 # below_paths.append(os.path.join(data_root, str(i + 1), file))
         return gt_paths, below_paths

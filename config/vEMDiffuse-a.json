@@ -25,6 +25,7 @@
     "checkpoint": "checkpoint",
 //    "resume_state": "experiments/emdiffusie-a-phlep/4860"
     "resume_state": "experiments/train_test_phelp_230812_114355/checkpoint/920"
+
 //      "resume_state": null // ex: 100, loading .state  and .pth from given epoch and iteration
   },
   "datasets": {

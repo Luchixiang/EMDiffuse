@@ -174,7 +174,6 @@ class DiReP(BaseModel):
         with torch.no_grad():
             for phase_data in self.phase_loader:
                 self.set_input(phase_data)
-                adjust = not self.opt['norm']
                 mean_outputs = []
                 for i in range(self.mean):
                     if self.opt['distributed']:
