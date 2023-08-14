@@ -65,7 +65,7 @@ def main_worker(gpu, ngpus_per_node, opt):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', type=str, default='config/EMDiffuse-n.json', help='JSON file for configuration')
-    parser.add_argument('--path', type=str, default='/data/EMDiffuse/denoise', help='patch of cropped patches')
+    parser.add_argument('--path', type=str, default=None, help='patch of cropped patches')
     parser.add_argument('-p', '--phase', type=str, choices=['train','test'], help='Run train or test', default='train')
     parser.add_argument('-b', '--batch', type=int, default=None, help='Batch size in every gpu')
     parser.add_argument('-gpu', '--gpu_ids', type=str, default=None)

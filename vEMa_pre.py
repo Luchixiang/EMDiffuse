@@ -2,6 +2,8 @@ import numpy as np
 import os
 from tifffile import imread, imwrite
 import argparse
+
+
 def find_max_number(folder_path):
     max_number = 0
     for filename in os.listdir(folder_path):
@@ -14,11 +16,15 @@ def find_max_number(folder_path):
         number = int(filename)
         max_number = max(max_number, number)
     return max_number
+
+
 def mkdir(path):
     if os.path.exists(path):
         import shutil
         shutil.rmtree(path)
     os.mkdir(path)
+
+
 def vem_transpose(data_root):
     stacks = []
     z_depth = find_max_number(data_root)
@@ -32,6 +38,7 @@ def vem_transpose(data_root):
     mkdir(target_file_path)
     for i in range(stack.shape[0]):
         imwrite(os.path.join(target_file_path, str(i) + '.tif'), stack[i])
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

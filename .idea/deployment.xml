@@ -2,6 +2,13 @@
 <project version="4">
   <component name="PublishConfigData" autoUpload="Always" serverName="diffusion_groups">
     <serverData>
+      <paths name="cvim">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/cxlu/EMDiffuse" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="hpc_">
         <serverdata>
           <mappings>
