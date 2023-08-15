@@ -12,8 +12,8 @@ Please feel free to contact us if you have any questions about the code.
 
 ### Update:
 
-1. find some small misalginment between the published version and our local version in 'dataset' code line 221, line 226: replace // with %.  (12/08/2023)
-2. Experiment on anisotropic volume with fewer layers(e.g., 128 layers). Since our input size is 256, we stack the anistropic volume firstly along the axial axis and then do vEMDiffuse-a training. (15/08/2023)
+1. find some small misalignment between the published version and our local version in 'dataset' code line 221, line 226: replace // with %.  (12/08/2023)
+2. Experiment on anisotropic volume with fewer layers(e.g., 128 layers). Since our input size is 256, we duplicate the anisotropic volume firstly along the axial axis and then do vEMDiffuse-a training. (15/08/2023)
 
 
 
