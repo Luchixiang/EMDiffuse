@@ -39,6 +39,7 @@ Register the image. This step automatically registers and crops the patch for mo
 
 ```python
 cd RAFT/core
+./download_models.sh  # at the first time, download the trained optical flow weight
 python register.py --path /data/EMDiffuse_dataset/brain_train --tissue brain
 ```
 
