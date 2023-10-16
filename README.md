@@ -38,8 +38,9 @@ Download the dataset from https://zenodo.org/record/8136295
 Register the image. This step automatically registers and crops the patch for model training. 
 
 ```python
-cd RAFT/core
+cd RAFT
 ./download_models.sh  # at the first time, download the trained optical flow weight
+cd core
 python register.py --path /data/EMDiffuse_dataset/brain_train --tissue brain
 ```
 
@@ -92,8 +93,9 @@ Download the dataset from https://zenodo.org/record/8136295
 Register the image
 
 ```python
-cd RAFT/core
+cd RAFT
 ./download_models.sh  # at the first time, download the trained optical flow weight
+cd core
 python register-super-res.py --path /data/EMDiffuse_dataset/brain_train
 ```
 
