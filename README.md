@@ -93,6 +93,7 @@ Register the image
 
 ```python
 cd RAFT/core
+./download_models.sh  # at the first time, download the trained optical flow weight
 python register-super-res.py --path /data/EMDiffuse_dataset/brain_train
 ```
 
