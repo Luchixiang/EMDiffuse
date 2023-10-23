@@ -51,7 +51,7 @@ For transfer learning on other tissue, please replace ``--tissue`` with the targ
 For your own single noise level dataset with structure like:
 
 ```
-Denoise 
+Denoise_dataset
 	1
 		brain_gt.tif
 		brain_wf.tif
