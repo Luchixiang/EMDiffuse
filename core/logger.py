@@ -112,16 +112,6 @@ class VisualWriter():
             outputs = Util.postprocess(results['result'], out_type=np.uint8, min_max=(-1, 1), norm=norm)
             for i in range(len(names)):
                 Image.fromarray(outputs[i]).save(os.path.join(result_path, names[i]))
-                if 'Variance' in names[i]:
-                    import matplotlib.pyplot as plt
-                    fig, axes = plt.subplots(nrows=1, ncols=1)
-                    board = 5
-                    vmax = outputs[i][board:-board, board:-board].max()
-                    vmin = outputs[i][board:-board, board:-board].min()
-                    im = axes.imshow(outputs[i],cmap=plt.get_cmap('turbo'),vmax=vmax, vmin=vmin)
-                    plt.colorbar(im)
-                    plt.savefig(os.path.join(result_path, names[i].replace('tif', 'png')))
-                    plt.close()
         except:
             raise NotImplementedError('You must specify the context of name and result in save_current_results functions of model.')
 

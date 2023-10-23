@@ -81,7 +81,6 @@ class DiReP(BaseModel):
         self.gt_max = data.get('gt_max', None)
         self.path = data['path']
         self.batch_size = len(data['path'])
-        self.repeat_num = data.get('noise_level')
     def get_current_visuals(self, phase='train'):
         dict = {
             'gt_image': (self.gt_image.detach()[:].float().cpu() + 1) / 2,

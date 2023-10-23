@@ -66,10 +66,10 @@ class EMDiffusenDataset(data.Dataset):  # Denoise and super-resolution Dataset
         gt = self.tfs(gt)
         ret['gt_image'] = gt
         ret['cond_image'] = img
-        ret['path'] = '_'.join(file_name.split('/')[-3:])
-        if self.phase != 'train':
-            # print(int(file_name.split('/')[-2].split('_')[-1]))
-            ret['noise_level'] = torch.tensor([int(file_name.split('/')[-2].split('_')[-1])])
+        ret['path'] = '_'.join(file_name.split(os.sep)[-3:])
+        # if self.phase != 'train':
+        #     # print(int(file_name.split('/')[-2].split('_')[-1]))
+        #     ret['noise_level'] = torch.tensor([int(file_name.split('/')[-2].split('_')[-1])])
         return ret
 
     def __len__(self):
@@ -150,7 +150,7 @@ class vEMDiffuseTrainingDatasetPatches(
         ret['gt_image'] = gt
         ret['cond_image'] = img
         # print(img.shape)
-        ret['path'] = '_'.join(gt_file_name.split('/')[-3:])
+        ret['path'] = '_'.join(gt_file_name.split(os.sep)[-3:])
         # print(ret['path'])
         return ret
 
@@ -298,15 +298,15 @@ class vEMDiffuseTestIsotropic(data.Dataset):  # dataset for testing vEMDiffuse-i
         ret = {}
         gt_file_name = self.gt_paths[index]
         # print(gt_file_name)
-        file_index = int(gt_file_name.split('/')[-2])
+        file_index = int(gt_file_name.split(os.sep)[-2])
         upper_bound = self.z_times // 2
         lower_bound = self.z_times // 2 if self.z_times % 2 == 0 else self.z_times // 2 + 1
         img_up = self.loader(os.path.join(self.data_root, str(file_index - upper_bound), gt_file_name.split('/')[-1]))
         img_below = self.loader(
-            os.path.join(self.data_root, str(file_index + lower_bound), gt_file_name.split('/')[-1]))
+            os.path.join(self.data_root, str(file_index + lower_bound), gt_file_name.split(os.sep)[-1]))
         gts = []
         for i in range(file_index - upper_bound + 1, file_index + lower_bound):
-            gts.append(self.loader(os.path.join(self.data_root, str(i), gt_file_name.split('/')[-1])))
+            gts.append(self.loader(os.path.join(self.data_root, str(i), gt_file_name.split(os.sep)[-1])))
         img_up = self.tfs(img_up)
         img_below = self.tfs(img_below)
         out_gts = []
@@ -318,7 +318,7 @@ class vEMDiffuseTestIsotropic(data.Dataset):  # dataset for testing vEMDiffuse-i
         ret['gt_image'] = gt
         ret['cond_image'] = img
         # print(img.shape)
-        ret['path'] = '_'.join(gt_file_name.split('/')[-3:])
+        ret['path'] = '_'.join(gt_file_name.split(os.sep)[-3:])
         # print(ret['path'])
         return ret
 
@@ -384,7 +384,7 @@ class vEMDiffuseTestAnIsotropic(
         ret['gt_image'] = gt
         ret['cond_image'] = img
         # print(img.shape)
-        ret['path'] = '_'.join(gt_file_name.split('/')[-3:])
+        ret['path'] = '_'.join(gt_file_name.split(os.sep)[-3:])
         # print(ret['path'])
         return ret
 
