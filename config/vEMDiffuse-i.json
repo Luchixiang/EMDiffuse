@@ -12,7 +12,7 @@
     // random seed, seed <0 represents randomization not used
     "finetune_norm": false,
     // find the parameters to optimize
-    "task": "3d_reconstruct",
+    "task": "3d_reconstruction",
     "path": {
         //set every part file path
         "base_dir": "experiments",

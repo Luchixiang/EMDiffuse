@@ -7,7 +7,7 @@
     "finetune_norm": false, // find the parameters to optimize
     "task" : "denoise",
     "path": { //set every part file path
-        "base_dir": "experiments2", // base path for all log except resume_state
+        "base_dir": "experiments", // base path for all log except resume_state
         "code": "code", // code backup
         "tb_logger": "tb_logger", // path of tensorboard logger
         "results": "results",
