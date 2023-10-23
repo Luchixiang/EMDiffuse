@@ -35,7 +35,7 @@ pip install -r requirements.txt
 #### Step 1
 Download the dataset from https://zenodo.org/record/8136295
 #### Step 2
-Register the image. This step automatically registers and crops the patch for model training. 
+Register the image. This step automatically registers and crops the patch for model training.  For our multiple noise level dataset
 
 ```python
 cd RAFT
@@ -47,6 +47,29 @@ python register.py --path /data/EMDiffuse_dataset/brain_train --tissue brain
 You should replace the argument  `--path` with the file path you place the dataset. 
 
 For transfer learning on other tissue, please replace ``--tissue`` with the target tissue such as the liver, heart, or bone marrow. 
+
+For your own single noise level dataset with structure like:
+
+```
+Denoise 
+	1
+		brain_gt.tif
+		brain_wf.tif
+	2
+		brain_gt.tif
+		brain_wf.tif
+	....
+	
+```
+
+```
+cd RAFT
+./download_models.sh  # at the first time, download the trained optical flow weight
+cd core
+python register_single_noiselevel.py --path /data/EMDiffuse_dataset/brain_train --tissue brain
+```
+
+You should replace the argument  `--path` with the file path you place the dataset. Replace `--tissue` with your own tissue name.  
 
 #### Step 3
 
@@ -96,7 +119,7 @@ Register the image
 cd RAFT
 ./download_models.sh  # at the first time, download the trained optical flow weight
 cd core
-python register-super-res.py --path /data/EMDiffuse_dataset/brain_train
+python super-res-register.py --path /data/EMDiffuse_dataset/brain_train
 ```
 
 #### Step 3

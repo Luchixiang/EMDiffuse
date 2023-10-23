@@ -62,13 +62,6 @@ def align_images(imageGray, templateGray, maxFeatures=500, keepPercent=0.2,
     # keep only the top matches
     keep = int(len(matches) * keepPercent)
     matches = matches[:keep]
-    if debug:
-        matchedVis = cv2.drawMatches(imageGray, kpsA, templateGray, kpsB,
-                                     matches, None)
-        matchedVis = imutils.resize(matchedVis, width=1000)
-        cv2.imwrite('/Users/luchixiang/Downloads/diffusion_figure/v2/fig1v2/matches.png', matchedVis)
-        cv2.imshow("Matched Keypoints", matchedVis)
-        cv2.waitKey(0)
     # check to see if we should visualize the matched keypoints
     ptsA = np.zeros((len(matches), 2), dtype="float")
     ptsB = np.zeros((len(matches), 2), dtype="float")
