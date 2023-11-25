@@ -9,7 +9,7 @@ class CubicWeightedPSNRLoss(nn.Module):
 
     def forward(self, input, target):
         # Perform cubic upsampling on the input
-        upsampled_input = torch.nn.functional.interpolate(input, scale_factor=2, mode='bicubic')
+        upsampled_input = torch.nn.functional.interpolate(input, scale_factor=(6, 1, 1), mode='bicubic')
 
         # Compute the pixel-wise cubic-weighted MSE loss
         mse_loss = torch.mean((upsampled_input - target) ** 2)
