@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2db1b2b-8d0f-4b38-a416-8f030a04cdeb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/RAFT/core/register_single.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RAFT/core/register_single_noise_level_self.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/EMDiffuse-n-transfer.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/3D-SRU-Net.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RAFT/core/register_single_noiselevel.py" beforeDir="false" afterPath="$PROJECT_DIR$/RAFT/core/register_single_noiselevel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/3D-SRU-Net.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/3D-SRU-Net.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -128,7 +124,8 @@
       <workItem from="1698126038371" duration="18000" />
       <workItem from="1698126065180" duration="9910000" />
       <workItem from="1698639331735" duration="608000" />
-      <workItem from="1700911141593" duration="54000" />
+      <workItem from="1700911141593" duration="297000" />
+      <workItem from="1700925903817" duration="149000" />
     </task>
     <servers />
   </component>

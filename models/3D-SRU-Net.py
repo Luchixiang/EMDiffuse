@@ -2,6 +2,26 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
+class CubicWeightedPSNRLoss(nn.Module):
+    def __init__(self):
+        super(CubicWeightedPSNRLoss, self).__init__()
+
+    def forward(self, input, target):
+        # Perform cubic upsampling on the input
+        upsampled_input = torch.nn.functional.interpolate(input, scale_factor=2, mode='bicubic')
+
+        # Compute the pixel-wise cubic-weighted MSE loss
+        mse_loss = torch.mean((upsampled_input - target) ** 2)
+
+        # Compute the cubic-weighted PSNR loss
+        psnr_loss = 10 * torch.log10(1 / mse_loss)
+
+        # Apply the weighting offset
+        weighted_psnr_loss = psnr_loss + 0.5
+
+        return weighted_psnr_loss
+
 def conv3x3(in_channels, out_channels, stride=1,
             padding=1, bias=True, groups=1):
     return nn.Conv2d(
@@ -91,8 +111,11 @@ if __name__ == '__main__':
     model = SRUNet(up_scale=8)
 
     a = torch.rand((1, 1, 16, 128, 128))
-
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
     b = model(a)
+    loss_function = CubicWeightedPSNRLoss()
+    loss = loss_function(b, a)
+
 
     print(b.shape)
 
