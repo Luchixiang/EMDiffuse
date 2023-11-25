@@ -203,7 +203,9 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, pa
 
     H = align_images(wf_img, gt_img)
     aligned = cv2.warpPerspective(wf_img, H, (w, h))
-    board = 32
+    # imwrite('./36_gt.tif', gt_img)
+    # imwrite('./36_wf.tif', aligned)
+    board = 64
     x = board
     x_end = wf_img.shape[0] - board
     y_end = wf_img.shape[0] - board
@@ -213,35 +215,36 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, pa
         while y + patch_size < y_end:
             crop_wf_img = aligned[x - board: x + patch_size + board, y - board: y + patch_size + board]
             crop_gt_img = gt_img[x - board: x + patch_size + board, y - board: y + patch_size + board]
+        #
+            # try:
+            #     H_sub = align_images(crop_wf_img, crop_gt_img)
+            # except:
+            #     print(f'can not align{count}, {save_wf_path}')
+            #     count += 1
+            #     y += stride
+            #     continue
+            #
+            # if H_sub is None:
+            #     print(f'can not align{count}, {save_wf_path}')
+            # else:
+            #     (h_sub, w_sub) = crop_gt_img.shape[:2]
+            #     crop_wf_img = cv2.warpPerspective(crop_wf_img, H_sub, (w_sub, h_sub))
+            #     if np.sum(crop_wf_img[board:-board, board:-board] == 0) > 10:
+            #         print(f'warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[board:-board, board:-board] == 0)}')
+            #         count += 1
+            #         y += stride
+            #         continue
+            # image1 = load_image(crop_gt_img)
+            # image2 = load_image(crop_wf_img)
+            #
+            # padder = InputPadder(image1.shape)
+            # image1, image2 = padder.pad(image1, image2)
+            #
+            # flow_low, flow_up = model(image1, image2, iters=20, test_mode=True)
+            # image_warped = warp(image2 / 255.0, flow_up)
+            # crop_wf_img = image_warped[0].permute(1, 2, 0).cpu().numpy()
+            # crop_wf_img = np.uint8(crop_wf_img[:, :, 0] * 255)
 
-            try:
-                H_sub = align_images(crop_wf_img, crop_gt_img)
-            except:
-                print(f'can not align{count}, {save_wf_path}')
-                count += 1
-                y += stride
-                continue
-
-            if H_sub is None:
-                print(f'can not align{count}, {save_wf_path}')
-            else:
-                (h_sub, w_sub) = crop_gt_img.shape[:2]
-                crop_wf_img = cv2.warpPerspective(crop_wf_img, H_sub, (w_sub, h_sub))
-                if np.sum(crop_wf_img[board:-board, board:-board] == 0) > 10:
-                    print(f'warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[board:-board, board:-board] == 0)}')
-                    count += 1
-                    y += stride
-                    continue
-            image1 = load_image(crop_gt_img)
-            image2 = load_image(crop_wf_img)
-
-            padder = InputPadder(image1.shape)
-            image1, image2 = padder.pad(image1, image2)
-
-            flow_low, flow_up = model(image1, image2, iters=20, test_mode=True)
-            image_warped = warp(image2 / 255.0, flow_up)
-            crop_wf_img = image_warped[0].permute(1, 2, 0).cpu().numpy()
-            crop_wf_img = np.uint8(crop_wf_img[:, :, 0] * 255)
             imwrite(os.path.join(save_wf_path, str(count) + '.tif'), crop_wf_img[board:-board, board:-board])
             imwrite(os.path.join(save_gt_path, str(count) + '.tif'), crop_gt_img[board:-board, board:-board])
             count += 1
@@ -258,18 +261,19 @@ def registration(args):
     model.eval()
 
     with torch.no_grad():
-        task = 'denoise'
+        task = 'denoise_test'
         path = args.path
         target_path = os.path.join(path, task)
         mkdir(target_path)
 
-        train_wf_path = os.path.join(target_path, 'train_wf')
-        train_gt_path = os.path.join(target_path, 'train_gt')
+        train_wf_path = os.path.join(target_path, 'test_wf')
+        train_gt_path = os.path.join(target_path, 'test_gt')
         mkdir(train_wf_path)
         mkdir(train_gt_path)
-        for i in range(2, 100):
-            # print(os.path.join(path, str(i), tissue +'_12.tif'))
-            if not os.path.exists(os.path.join(path, str(i), tissue +'_12.tif')):
+        for i in range(4, 5):
+
+            print(os.path.join(path, str(i), tissue +str(i)+'_36.tif'))
+            if not os.path.exists(os.path.join(path, str(i), tissue +str(i)+'_36.tif')):
                 continue
             roi_wf_path = os.path.join(train_wf_path, str(i))
             roi_gt_path = os.path.join(train_gt_path, str(i))
@@ -283,7 +287,7 @@ def registration(args):
                 save_gt_path = os.path.join(roi_gt_path, type[:-4])
                 mkdir(save_wf_path)
                 mkdir(save_gt_path)
-                gt_file_img = cv2.imread(os.path.join(path, str(i), tissue +'_12.tif'))
+                gt_file_img = cv2.imread(os.path.join(path, str(i), tissue +str(i)+'_36.tif'))
                 wf_file_img = cv2.imread(os.path.join(path, str(i), type))
                 # print(wf_file_img.min())
                 process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path,  model=model)
