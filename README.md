@@ -190,7 +190,7 @@ Vem_data
 ```
 
 #### Training vEMDiffuse-i
-
+For vEMDiffuse-i, the training data must be isotropic. 
 ```
 python run.py -c config/vEMDiffuse-i.json -b 16 -gpu 0,1,2,3 --port 20022 --path ./Vem_data -z 5
 ```
@@ -199,6 +199,7 @@ Where parameter ``-z`` means the number of layers you want the model to learn to
 
 ####  Training vEMDiffuse-a
 
+For vEMDiffuse-a, the training data can be anisotropic. The vEMa_pre.py firstly slices your volume along the lateral (Y axis) to construct the training data. The model learns the lateral information and applys it to improve axial resolution. 
  ```
  python vEMa_pre.py --path ./Vem_data
  python run.py -c config/vEMDiffuse-a.json -b 16 -gpu 0,1,2,3 --port 20022 --path ./Vem_data/transposed -z 5
