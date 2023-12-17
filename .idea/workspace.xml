@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2db1b2b-8d0f-4b38-a416-8f030a04cdeb" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/demo/3sets1_4w_03.tif" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
@@ -26,14 +27,15 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/demo" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/demo" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/RAFT/core" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -126,7 +128,9 @@
       <workItem from="1698639331735" duration="608000" />
       <workItem from="1700911141593" duration="297000" />
       <workItem from="1700925903817" duration="1349000" />
-      <workItem from="1701171105407" duration="215000" />
+      <workItem from="1701171105407" duration="540000" />
+      <workItem from="1702019995984" duration="505000" />
+      <workItem from="1702792064512" duration="375000" />
     </task>
     <servers />
   </component>

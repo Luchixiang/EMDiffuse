@@ -150,7 +150,7 @@ python test_pre.py --path /data/EMDiffuse_dataset/brain_test --task super
 python run.py -p test -c config/EMDiffuse-n.json -g 0 -b 60 --path /data/EMDiffuse_dataset/brain_test/super_test_crop_patches
 ```
 
-## EMDiffuse-n and EMDiffuse-r For your own EM dataset
+## EMDiffuse-n and EMDiffuse-r For your own EM dataset (demo image)
 
 **Note that all the above steps are designed for our multiple noise level denoising and super-resolution datasets. If you want to try your own dataset, you may need to modify the crop and register codes to meet the format of your dataset. We provide a demo for you to implement inference on a simpler dataset with the file structure:**
 
@@ -168,11 +168,14 @@ i.e., all the noisy images or low-resolution images are in the same folder.
 ```python
 python crop_single_file.py --path ./Test_images --task denoise 
 ```
-
+for example:
+```python
+python crop_single_file.py --path ./demo --task denoise 
+```
 #### Step 2
 
 ```python
-python run.py -p test -c config/EMDiffuse-n.json -g 0 -b 60 --path ./Test_images/denoise_test_crop_patches
+python run.py -p test -c config/EMDiffuse-n.json -g 0 -b 60 --path ./demo/denoise_test_crop_patches
 ```
 
 ## vEMDiffuse for vEM isotropic reconstruction
