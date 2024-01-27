@@ -25,11 +25,12 @@
                     "data_root": "/data/cxlu/macos_backup/EMDiffuse_dataset/denoise/train_wf",
                     "data_len": -1,
                     "norm": true,
-                   "percent": false
+                   "percent": false,
+                  "image_size": [768, 768]
                 }
             },
             "dataloader":{
-                "validation_split": 20, // percent or number
+                "validation_split": 2, // percent or number
                 "args":{ // arguments to initialize train_dataloader
                     "batch_size": 3, // batch size in each gpu
                     "num_workers": 4,
@@ -38,7 +39,7 @@
                     "drop_last": true
                 },
                 "val_args":{ // arguments to initialize valid_dataloader, will overwrite the parameters in train_dataloader
-                    "batch_size": 10, // batch size in each gpu
+                    "batch_size": 1, // batch size in each gpu
                     "num_workers": 4,
                     "shuffle": false,
                     "pin_memory": true,
@@ -48,13 +49,13 @@
         },
         "test": {
             "which_dataset": {
-
                 "name": "EMDiffusenDataset", // import Dataset() class / function(not recommend) from default file
                 "args":{
                     "data_root": "/data/cxlu/denoise_single",
                     "norm":true,
                    "percent": false,
-                    "phase": "val"
+                    "phase": "val",
+                  "image_size": [768, 768]
                 }
             },
             "dataloader":{

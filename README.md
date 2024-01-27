@@ -41,7 +41,7 @@ Register the image. This step automatically registers and crops the patch for mo
 cd RAFT
 ./download_models.sh  # at the first time, download the trained optical flow weight
 cd core
-python register.py --path /data/EMDiffuse_dataset/brain_train --tissue brain
+python register.py --path /data/EMDiffuse_dataset/brain_train --tissue Brain
 ```
 
 You should replace the argument  `--path` with the file path you place the dataset. 

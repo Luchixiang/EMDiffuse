@@ -196,7 +196,7 @@ def viz(img, flo):
     cv2.waitKey()
 
 
-def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, patch_size=256, stride=224, model=None):
+def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, patch_size=256, stride=224, model=None, board=32):
     wf_img = cv2.cvtColor(wf_img, cv2.COLOR_BGR2GRAY)
     gt_img = cv2.cvtColor(gt_img, cv2.COLOR_BGR2GRAY)
     (h, w) = gt_img.shape[:2]
@@ -210,7 +210,6 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, pa
     else:
         H = align_images(wf_img, gt_img)
     aligned = cv2.warpPerspective(wf_img, H, (w, h))
-    board = 32
     x = board
     x_end = wf_img.shape[0] - board
     y_end = wf_img.shape[0] - board
@@ -244,14 +243,15 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, pa
                     continue
             image1 = load_image(crop_gt_img)
             image2 = load_image(crop_wf_img)
-
-            padder = InputPadder(image1.shape)
-            image1, image2 = padder.pad(image1, image2)
-
             flow_low, flow_up = model(image1, image2, iters=20, test_mode=True)
             image_warped = warp(image2 / 255.0, flow_up)
             crop_wf_img = image_warped[0].permute(1, 2, 0).cpu().numpy()
             crop_wf_img = np.uint8(crop_wf_img[:, :, 0] * 255)
+            if np.sum(crop_wf_img[board:-board, board:-board] == 0) > 10:
+                print(f'after optical flow warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[board:-board, board:-board] == 0)}')
+                count += 1
+                y += stride
+                continue
             imwrite(os.path.join(save_wf_path, str(count) + '.tif'), crop_wf_img[board:-board, board:-board])
             imwrite(os.path.join(save_gt_path, str(count) + '.tif'), crop_gt_img[board:-board, board:-board])
             count += 1
@@ -278,7 +278,7 @@ def registration(args):
         mkdir(train_wf_path)
         mkdir(train_gt_path)
         for i in range(2, 100):
-            if not os.path.exists(os.path.join(path, str(i), tissue +'__4w_09.tif')):
+            if not os.path.exists(os.path.join(path, str(i), tissue + '__4w_09.tif')):
                 continue
             roi_wf_path = os.path.join(train_wf_path, str(i))
             roi_gt_path = os.path.join(train_gt_path, str(i))
@@ -292,13 +292,17 @@ def registration(args):
                 save_gt_path = os.path.join(roi_gt_path, type[:-4])
                 mkdir(save_wf_path)
                 mkdir(save_gt_path)
-                gt_file_img = cv2.imread(os.path.join(path, str(i), tissue +'__4w_09.tif'))
+                gt_file_img = cv2.imread(os.path.join(path, str(i), tissue + '__4w_09.tif'))
                 wf_file_img = cv2.imread(os.path.join(path, str(i), type))
                 sup_wf_img = None
-                if '_04' in type or '05' in type and tissue == 'brain':
-                    sup_wf_img = cv2.imread(os.path.join(path, str(i), tissue +'__4w_06.tif'))
+                if '_04' in type or '05' in type :
+                    if tissue == 'Brain':
+                        print('using clean image to help register')
+                        sup_wf_img = cv2.imread(os.path.join(path, str(i), tissue + '__4w_06.tif'))
                 # print(wf_file_img.min())
-                process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path, sup_wf_img=sup_wf_img, model=model)
+                process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path, sup_wf_img=sup_wf_img, model=model,
+                             patch_size=args.patch_size, stride=(args.patch_size*5) // 6, board=args.board)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -310,6 +314,8 @@ if __name__ == '__main__':
     parser.add_argument('--mixed_precision', action='store_true', help='use mixed precision')
     parser.add_argument('--alternate_corr', action='store_true', help='use efficent correlation implementation')
     parser.add_argument('--occlusion', action='store_true', help='predict occlusion masks')
+    parser.add_argument('--patch_size', default=256, type=int)
+    parser.add_argument('--board', default=32, type=int)
 
     args = parser.parse_args()
 

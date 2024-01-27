@@ -46,7 +46,8 @@ def normalization(channels, group_num):
     :return: an nn.Module for normalization.
     """
 
-    return GroupNorm32(group_num, channels)
+    # return GroupNorm32(group_num, channels)
+    return nn.GroupNorm(group_num, channels) # todo: normalization changed
 
 def Layernormalization(channels):
     """
@@ -127,7 +128,7 @@ def count_flops_attn(model, _x, y):
     model.total_ops += torch.DoubleTensor([matmul_ops])
 
 
-def gamma_embedding(gammas, dim, max_period=10000):
+def gamma_embedding(gammas, dim:int, max_period:int=10000):
     """
     Create sinusoidal timestep embeddings.
     :param gammas: a 1-D Tensor of N indices, one per batch element.
