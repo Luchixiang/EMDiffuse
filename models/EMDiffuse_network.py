@@ -12,7 +12,6 @@ class Network(BaseNetwork):
         super(Network, self).__init__(**kwargs)
 
         from .guided_diffusion_modules.unet import UNet
-        from .guided_diffusion_modules.unet_jit2 import UNetJit
         self.denoise_fn = UNet(**unet)
         self.beta_schedule = beta_schedule
         print('network norm:', norm)
@@ -23,6 +22,7 @@ class Network(BaseNetwork):
         self.loss_fn = loss_fn
 
     def set_new_noise_schedule(self, device=torch.device('cuda'), phase='train'):
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         to_torch = partial(torch.tensor, dtype=torch.float32, device=device)
         betas = make_beta_schedule(**self.beta_schedule[phase])
         betas = betas.detach().cpu().numpy() if isinstance(
@@ -84,7 +84,7 @@ class Network(BaseNetwork):
         )
 
     @torch.no_grad()
-    def p_sample(self, y_t, t, clip_denoised=True, y_cond=None, path=None, adjust=False):
+    def p_sample(self, y_t, t, clip_denoised=True, y_cond=None, adjust=False):
         model_mean, model_log_variance, y_0_hat = self.p_mean_variance(
             y_t=y_t, t=t, clip_denoised=clip_denoised, y_cond=y_cond)
 
@@ -99,7 +99,7 @@ class Network(BaseNetwork):
         return model_mean + noise * (0.5 * model_log_variance).exp(), y_0_hat
 
     @torch.no_grad()
-    def restoration(self, y_cond, y_t=None, y_0=None, mask=None, sample_num=8, path=None, adjust=False):
+    def restoration(self, y_cond, y_t=None, y_0=None, mask=None, sample_num=8, adjust=False):
         b, *_ = y_cond.shape
 
         assert self.num_timesteps > sample_num, 'num_timesteps must greater than sample_num'
@@ -112,7 +112,7 @@ class Network(BaseNetwork):
 
         for i in tqdm(reversed(range(0, self.num_timesteps)), desc='sampling loop time step', total=self.num_timesteps):
             t = torch.full((b,), i, device=y_cond.device, dtype=torch.long)
-            y_t, y_0_hat = self.p_sample(y_t, t, y_cond=y_cond, path=path, adjust=adjust)
+            y_t, y_0_hat = self.p_sample(y_t, t, y_cond=y_cond, adjust=adjust)
             if mask is not None:
                 y_t = y_0 * (1. - mask) + mask * y_t
             if i % sample_inter == 0:
@@ -154,7 +154,7 @@ def default(val, d):
 
 
 def extract(a, t, x_shape=(1, 1, 1, 1)):
-    b, _ = t.shape
+    b, *_ = t.shape
     out = a.gather(-1, t)
     return out.reshape(b, *((1,) * (len(x_shape) - 1)))
 
@@ -176,6 +176,7 @@ def make_beta_schedule(schedule, n_timestep, linear_start=1e-6, linear_end=1e-2,
         betas = np.linspace(linear_start, linear_end,
                             n_timestep, dtype=np.float64)
     elif schedule == 'warmup10':
+
         betas = _warmup_beta(linear_start, linear_end,
                              n_timestep, 0.1)
     elif schedule == 'warmup50':

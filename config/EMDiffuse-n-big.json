@@ -1,5 +1,5 @@
 {
-    "name": "EMDiffuse-n", // experiments name
+    "name": "EMDiffuse-r", // experiments name
     "norm": true,
     "percent": false,
     "gpu_ids": [0, 1], // gpu ids list, default is single 0
@@ -12,8 +12,8 @@
         "tb_logger": "tb_logger", // path of tensorboard logger
         "results": "results",
         "checkpoint": "checkpoint",
-//        "resume_state": "experiments/train_EMDiffuse-n_230712_163715/checkpoint/2720" // checkpoint path, set to null if used for training
-        "resume_state": "experiments/EMDiffuse-n/2720" // checkpoint path, set to null if used for training
+        "resume_state": "experiments/train_EMDiffuse-n-large_240125_221819/5180" // checkpoint path, set to null if used for training
+//        "resume_state": "experiments/EMDiffuse-n/2720" // checkpoint path, set to null if used for training
 //        "resume_state": null // checkpoint path, set to null if used for training
     },
 
@@ -51,7 +51,7 @@
             "which_dataset": {
                 "name": "EMDiffusenDataset", // import Dataset() class / function(not recommend) from default file
                 "args":{
-                    "data_root": "/data/cxlu/denoise_single",
+                    "data_root": "/data/cxlu/macos_backup/EMDiffuse_dataset/denoise/test_wf",
                     "norm":true,
                    "percent": false,
                     "phase": "val",
@@ -61,7 +61,7 @@
             "dataloader":{
                 "args":{
                     "batch_size": 8,
-                    "num_workers": 4,
+                    "num_workers": 0,
                     "pin_memory": true
                 }
             }
@@ -72,7 +72,7 @@
         "which_model": { // import designated  model(trainer) using arguments
             "name": ["models.EMDiffuse_model", "DiReP"], // import Model() class / function(not recommend) from models.EMDiffuse_model.py (default is [models.EMDiffuse_model.py])
             "args": {
-                "sample_num": 8, // process of each image
+                "sample_num": 1, // process of each image
                 "task": "denoise",
                 "ema_scheduler": {
                     "ema_start": 1,
@@ -121,7 +121,7 @@
                         },
                            "test": {
                             "schedule": "linear",
-                            "n_timestep": 1000,
+                            "n_timestep": 500,
                             "linear_start": 1e-4,
                             "linear_end": 0.09
                         }

@@ -1,15 +1,7 @@
 import sys
-
 sys.path.append('core')
-
 import argparse
-import os
-import cv2
-import glob
-import numpy as np
 import torch
-from PIL import Image
-
 from raft import RAFT
 from utils import flow_viz
 from utils.utils import InputPadder
@@ -17,10 +9,8 @@ from align_functions import *
 import torch.nn.functional as F
 import os
 from tifffile import imwrite
-
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
-
-DEVICE = 'cpu'
+DEVICE = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
 
 def image_resize(image, width=None, height=None, inter=cv2.INTER_AREA):
@@ -285,7 +275,7 @@ def registration(args):
             mkdir(roi_wf_path)
             mkdir(roi_gt_path)
             for type in os.listdir(os.path.join(path, str(i))):
-                if '_09' in type or '2w' in type:
+                if '_09' in type or '2w' in type or not type.endswith('tif'):
                     continue
                 print(f'processing{i}, {type}')
                 save_wf_path = os.path.join(roi_wf_path, type[:-4])
@@ -301,7 +291,7 @@ def registration(args):
                         sup_wf_img = cv2.imread(os.path.join(path, str(i), tissue + '__4w_06.tif'))
                 # print(wf_file_img.min())
                 process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path, sup_wf_img=sup_wf_img, model=model,
-                             patch_size=args.patch_size, stride=(args.patch_size*5) // 6, board=args.board)
+                             patch_size=args.patch_size, stride=int(args.patch_size * (1-args.overlap)), board=args.board)
 
 
 if __name__ == '__main__':
@@ -316,6 +306,7 @@ if __name__ == '__main__':
     parser.add_argument('--occlusion', action='store_true', help='predict occlusion masks')
     parser.add_argument('--patch_size', default=256, type=int)
     parser.add_argument('--board', default=32, type=int)
+    parser.add_argument('--overlap', default=0.125, type=int)
 
     args = parser.parse_args()
 

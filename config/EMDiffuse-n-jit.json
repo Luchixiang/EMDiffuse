@@ -12,8 +12,8 @@
         "tb_logger": "tb_logger", // path of tensorboard logger
         "results": "results",
         "checkpoint": "checkpoint",
-//        "resume_state": "experiments/train_EMDiffuse-n_230712_163715/checkpoint/2720" // checkpoint path, set to null if used for training
-        "resume_state": "experiments/EMDiffuse-n/2720_jit" // checkpoint path, set to null if used for training
+        "resume_state": "experiments/train_EMDiffuse-n-large_240125_221819/5180_jit" // checkpoint path, set to null if used for training
+//        "resume_state": "experiments/EMDiffuse-n/2720_jit" // checkpoint path, set to null if used for training
 //        "resume_state": null // checkpoint path, set to null if used for training
     },
 

@@ -91,8 +91,12 @@ class EMDiffusenDataset(data.Dataset):  # Denoise and super-resolution Dataset
         img_paths = []
         gt_paths = []
         for cell_num in os.listdir(data_root):
+            if cell_num == '.DS_Store':
+                continue
             cell_path = os.path.join(data_root, cell_num)
             for noise_level in os.listdir(cell_path):
+                if cell_num == '.DS_Store':
+                    continue
                 for img in sorted(os.listdir(os.path.join(cell_path, noise_level))):
                     if 'tif' in img:
                         img_paths.append(os.path.join(cell_path, noise_level, img))

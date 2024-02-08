@@ -105,8 +105,8 @@ def parse(args):
 
     ''' replace the config context using args '''
     opt['phase'] = args.phase
-    if args.gpu_ids is not None:
-        opt['gpu_ids'] = [int(id) for id in args.gpu_ids.split(',')]
+    if args.gpu is not None:
+        opt['gpu_ids'] = [int(id) for id in args.gpu.split(',')]
     if args.batch is not None:
         opt['datasets'][opt['phase']]['dataloader']['args']['batch_size'] = args.batch
     if args.path is not None:
@@ -140,6 +140,8 @@ def parse(args):
         if 'resume' not in key and 'base' not in key and 'root' not in key:
             opt['path'][key] = os.path.join(experiments_root, path)
             mkdirs(opt['path'][key])
+    if args.resume is not None:
+        opt['path']['resume_state'] = args.resume
 
     ''' debug mode '''
     if 'debug' in opt['name']:

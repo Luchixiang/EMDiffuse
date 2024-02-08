@@ -2,31 +2,38 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2db1b2b-8d0f-4b38-a416-8f030a04cdeb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/3D-SR-Unet/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3D-SR-Unet/data.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3D-SR-Unet/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/3D-SR-Unet/train.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bioimage_zoo.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/EMDiffuse-n-big.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/EMDiffuse-n-jit.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo/27.tif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo/64.tif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo/9.tif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/EMDiffuse_model_jit.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/EMDiffuse_network_jit.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/guided_diffusion_modules/unet_jit.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/guided_diffusion_modules/unet_jit2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/modify_weight_keys.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/EMDiffuse.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/EMDiffuse.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RAFT/core/raftConfig.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/crop_single2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/emdiffuse_conifg.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradio_run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RAFT/core/optical_flow_registration.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/RAFT/core/register.py" beforeDir="false" afterPath="$PROJECT_DIR$/RAFT/core/register.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RAFT/core/register_single.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RAFT/core/register_single_noise_level_self.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RAFT/core/register_single_noiselevel.py" beforeDir="false" afterPath="$PROJECT_DIR$/RAFT/core/register_custom.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RAFT/core/super-res-register.py" beforeDir="false" afterPath="$PROJECT_DIR$/RAFT/core/super-res-register.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bioimage_zoo.py" beforeDir="false" afterPath="$PROJECT_DIR$/bioimage_zoo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/EMDiffuse-n-big.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/EMDiffuse-n-big.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/EMDiffuse-n-jit.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/EMDiffuse-n-jit.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/EMDiffuse-n.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/EMDiffuse-n.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/3D-SRU-Net.py" beforeDir="false" afterPath="$PROJECT_DIR$/3D-SR-Unet/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/base_network.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_network.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/praser.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/praser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crop_single_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/crop_single_file.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/27.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/64.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo/9.tif" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/models/EMDiffuse_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/EMDiffuse_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/EMDiffuse_network.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/EMDiffuse_network.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/guided_diffusion_modules/nn.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/guided_diffusion_modules/nn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/EMDiffuse_network_jit.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/EMDiffuse_network_jit.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/vEMDiffuse_network.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/vEMDiffuse_network.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modify_weight_keys.py" beforeDir="false" afterPath="$PROJECT_DIR$/modify_weight_keys.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -63,17 +70,17 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/demo" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/RAFT/core" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/demo" />
       <recent name="$PROJECT_DIR$/data" />
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/RAFT/core" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -88,8 +95,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.unet_jit">
-    <configuration name="probability" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.sad">
+    <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="EMDiffuse" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -102,7 +109,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/probability.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -125,6 +132,28 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/RAFT/core/register_single.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="sad" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="EMDiffuse" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/RAFT/core" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/RAFT/core/sad.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -179,10 +208,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.sad" />
+        <item itemvalue="Python.app" />
         <item itemvalue="Python.unet_jit" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.register_single" />
-        <item itemvalue="Python.probability" />
       </list>
     </recent_temporary>
   </component>
@@ -216,7 +246,12 @@
       <workItem from="1702019995984" duration="505000" />
       <workItem from="1702792064512" duration="2252000" />
       <workItem from="1702869650715" duration="3000" />
-      <workItem from="1706151944623" duration="55968000" />
+      <workItem from="1706151944623" duration="70415000" />
+      <workItem from="1706437177149" duration="11398000" />
+      <workItem from="1706514315500" duration="820000" />
+      <workItem from="1706515284278" duration="16877000" />
+      <workItem from="1707100933941" duration="33000" />
+      <workItem from="1707243870645" duration="17476000" />
     </task>
     <servers />
   </component>
@@ -237,9 +272,11 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/EMDiffuse$sad.coverage" NAME="sad Coverage Results" MODIFIED="1707316036011" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/RAFT/core" />
     <SUITE FILE_PATH="coverage/EMDiffuse$register_single.coverage" NAME="register_single Coverage Results" MODIFIED="1698222541339" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/RAFT/core" />
     <SUITE FILE_PATH="coverage/EMDiffuse$test.coverage" NAME="test Coverage Results" MODIFIED="1702798250887" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/EMDiffuse$probability.coverage" NAME="probability Coverage Results" MODIFIED="1682664011675" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/EMDiffuse$app.coverage" NAME="app Coverage Results" MODIFIED="1706505454953" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/EMDiffuse$unet_jit.coverage" NAME="unet_jit Coverage Results" MODIFIED="1706280073931" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models/guided_diffusion_modules" />
   </component>
 </project>

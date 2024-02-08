@@ -1,0 +1,15 @@
+24-01-29 13:24:42.184 - INFO: Create the log file in directory experiments/test_EMDiffuse-n-NCtransfer_unfinetune_240129_132441.
+
+24-01-29 13:24:42.190 - INFO: Dataset [EMDiffusenDataset() form data.dataset] is created.
+24-01-29 13:24:42.191 - INFO: Dataset for test have 15 samples.
+24-01-29 13:24:42.318 - INFO: Network [Network() form models.EMDiffuse_network] is created.
+24-01-29 13:24:42.318 - WARNING: Config is a str, converts to a dict {'name': 'mae'}
+24-01-29 13:24:42.880 - INFO: Metric [mae() form models.metric] is created.
+24-01-29 13:24:42.880 - WARNING: Config is a str, converts to a dict {'name': 'mse_loss'}
+24-01-29 13:24:42.881 - INFO: Loss [mse_loss() form models.loss] is created.
+24-01-29 13:24:42.986 - INFO: Beign loading pretrained model [Network] ...
+24-01-29 13:24:42.986 - WARNING: Pretrained model in [experiments/train_EMDiffuse-n_230712_163715/checkpoint/2720_Network.pth] is not existed, Skip it
+24-01-29 13:24:42.986 - INFO: Beign loading pretrained model [Network_ema] ...
+24-01-29 13:24:42.986 - WARNING: Pretrained model in [experiments/train_EMDiffuse-n_230712_163715/checkpoint/2720_Network_ema.pth] is not existed, Skip it
+24-01-29 13:24:43.004 - INFO: Model [DiReP() form models.EMDiffuse_model] is created.
+24-01-29 13:24:43.004 - INFO: Begin model test.

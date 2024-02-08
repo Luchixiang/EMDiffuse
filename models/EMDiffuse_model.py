@@ -169,11 +169,11 @@ class DiReP(BaseModel):
     def model_test(self, sample_num):
         if self.opt['distributed']:
             output, self.visuals = self.netG.module.restoration(self.cond_image,
-                                                                sample_num=sample_num, path=self.path)
+                                                                sample_num=sample_num)
         else:
+
             output, self.visuals = self.netG.restoration(self.cond_image,
-                                                         sample_num=sample_num,
-                                                         path=self.path)
+                                                         sample_num=sample_num)
         return output
 
     def test(self):

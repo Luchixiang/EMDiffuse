@@ -1,0 +1,90 @@
+24-02-08 13:04:13.303 - INFO: Create the log file in directory experiments/train_EMDiffuse-n_240208_130412.
+
+24-02-08 13:04:13.307 - INFO: Dataset [EMDiffusenDataset() form data.dataset] is created.
+24-02-08 13:04:13.307 - INFO: Dataset for train have 45 samples.
+24-02-08 13:04:13.307 - INFO: Dataset for val have 4 samples.
+24-02-08 13:04:13.414 - INFO: Network [Network() form models.EMDiffuse_network] is created.
+24-02-08 13:04:13.414 - INFO: Network [Network] weights initialize using [kaiming] method.
+24-02-08 13:04:13.585 - WARNING: Config is a str, converts to a dict {'name': 'mae'}
+24-02-08 13:04:14.540 - INFO: Metric [mae() form models.metric] is created.
+24-02-08 13:04:14.540 - WARNING: Config is a str, converts to a dict {'name': 'mse_loss'}
+24-02-08 13:04:14.541 - INFO: Loss [mse_loss() form models.loss] is created.
+24-02-08 13:04:14.606 - INFO: Beign loading pretrained model [Network] ...
+24-02-08 13:04:14.606 - WARNING: Pretrained model in [experiments/EMDiffuse-n/2720_Network.pth] is not existed, Skip it
+24-02-08 13:04:14.606 - INFO: Beign loading pretrained model [Network_ema] ...
+24-02-08 13:04:14.606 - WARNING: Pretrained model in [experiments/EMDiffuse-n/2720_Network_ema.pth] is not existed, Skip it
+24-02-08 13:04:14.608 - INFO: Beign loading training states
+24-02-08 13:04:14.608 - WARNING: Training state in [experiments/EMDiffuse-n/2720.state] is not existed, Skip it
+24-02-08 13:04:14.612 - INFO: Model [DiReP() form models.EMDiffuse_model] is created.
+24-02-08 13:20:15.606 - INFO: Create the log file in directory experiments/train_EMDiffuse-n_240208_130412.
+
+24-02-08 13:20:15.606 - INFO: Create the log file in directory experiments/train_EMDiffuse-n_240208_130412.
+
+24-02-08 13:20:15.616 - INFO: Dataset [EMDiffusenDataset() form data.dataset] is created.
+24-02-08 13:20:15.616 - INFO: Dataset [EMDiffusenDataset() form data.dataset] is created.
+24-02-08 13:20:15.621 - INFO: Dataset for train have 45 samples.
+24-02-08 13:20:15.621 - INFO: Dataset for train have 45 samples.
+24-02-08 13:20:15.621 - INFO: Dataset for val have 4 samples.
+24-02-08 13:20:15.621 - INFO: Dataset for val have 4 samples.
+24-02-08 13:20:15.781 - INFO: Network [Network() form models.EMDiffuse_network] is created.
+24-02-08 13:20:15.781 - INFO: Network [Network() form models.EMDiffuse_network] is created.
+24-02-08 13:20:15.782 - INFO: Network [Network] weights initialize using [kaiming] method.
+24-02-08 13:20:15.782 - INFO: Network [Network] weights initialize using [kaiming] method.
+24-02-08 13:20:15.973 - WARNING: Config is a str, converts to a dict {'name': 'mae'}
+24-02-08 13:20:15.973 - WARNING: Config is a str, converts to a dict {'name': 'mae'}
+24-02-08 13:20:15.973 - INFO: Metric [mae() form models.metric] is created.
+24-02-08 13:20:15.973 - INFO: Metric [mae() form models.metric] is created.
+24-02-08 13:20:15.973 - WARNING: Config is a str, converts to a dict {'name': 'mse_loss'}
+24-02-08 13:20:15.973 - WARNING: Config is a str, converts to a dict {'name': 'mse_loss'}
+24-02-08 13:20:15.973 - INFO: Loss [mse_loss() form models.loss] is created.
+24-02-08 13:20:15.973 - INFO: Loss [mse_loss() form models.loss] is created.
+24-02-08 13:20:16.069 - INFO: Beign loading pretrained model [Network] ...
+24-02-08 13:20:16.069 - INFO: Beign loading pretrained model [Network] ...
+24-02-08 13:20:16.069 - WARNING: Pretrained model in [experiments/EMDiffuse-n/2720_Network.pth] is not existed, Skip it
+24-02-08 13:20:16.069 - WARNING: Pretrained model in [experiments/EMDiffuse-n/2720_Network.pth] is not existed, Skip it
+24-02-08 13:20:16.069 - INFO: Beign loading pretrained model [Network_ema] ...
+24-02-08 13:20:16.069 - INFO: Beign loading pretrained model [Network_ema] ...
+24-02-08 13:20:16.070 - WARNING: Pretrained model in [experiments/EMDiffuse-n/2720_Network_ema.pth] is not existed, Skip it
+24-02-08 13:20:16.070 - WARNING: Pretrained model in [experiments/EMDiffuse-n/2720_Network_ema.pth] is not existed, Skip it
+24-02-08 13:20:16.073 - INFO: Beign loading training states
+24-02-08 13:20:16.073 - INFO: Beign loading training states
+24-02-08 13:20:16.073 - WARNING: Training state in [experiments/EMDiffuse-n/2720.state] is not existed, Skip it
+24-02-08 13:20:16.073 - WARNING: Training state in [experiments/EMDiffuse-n/2720.state] is not existed, Skip it
+24-02-08 13:20:16.097 - INFO: Model [DiReP() form models.EMDiffuse_model] is created.
+24-02-08 13:20:16.097 - INFO: Model [DiReP() form models.EMDiffuse_model] is created.
+24-02-08 15:00:44.314 - INFO: Create the log file in directory experiments/train_EMDiffuse-n_240208_150044.
+
+24-02-08 15:00:44.314 - INFO: Create the log file in directory experiments/train_EMDiffuse-n_240208_150044.
+
+24-02-08 15:00:44.324 - INFO: Dataset [EMDiffusenDataset() form data.dataset] is created.
+24-02-08 15:00:44.324 - INFO: Dataset [EMDiffusenDataset() form data.dataset] is created.
+24-02-08 15:00:44.329 - INFO: Dataset for train have 45 samples.
+24-02-08 15:00:44.329 - INFO: Dataset for train have 45 samples.
+24-02-08 15:00:44.329 - INFO: Dataset for val have 4 samples.
+24-02-08 15:00:44.329 - INFO: Dataset for val have 4 samples.
+24-02-08 15:00:44.528 - INFO: Network [Network() form models.EMDiffuse_network] is created.
+24-02-08 15:00:44.528 - INFO: Network [Network() form models.EMDiffuse_network] is created.
+24-02-08 15:00:44.529 - INFO: Network [Network] weights initialize using [kaiming] method.
+24-02-08 15:00:44.529 - INFO: Network [Network] weights initialize using [kaiming] method.
+24-02-08 15:00:44.700 - WARNING: Config is a str, converts to a dict {'name': 'mae'}
+24-02-08 15:00:44.700 - WARNING: Config is a str, converts to a dict {'name': 'mae'}
+24-02-08 15:00:44.701 - INFO: Metric [mae() form models.metric] is created.
+24-02-08 15:00:44.701 - INFO: Metric [mae() form models.metric] is created.
+24-02-08 15:00:44.701 - WARNING: Config is a str, converts to a dict {'name': 'mse_loss'}
+24-02-08 15:00:44.701 - WARNING: Config is a str, converts to a dict {'name': 'mse_loss'}
+24-02-08 15:00:44.702 - INFO: Loss [mse_loss() form models.loss] is created.
+24-02-08 15:00:44.702 - INFO: Loss [mse_loss() form models.loss] is created.
+24-02-08 15:00:44.791 - INFO: Beign loading pretrained model [Network] ...
+24-02-08 15:00:44.791 - INFO: Beign loading pretrained model [Network] ...
+24-02-08 15:00:44.791 - WARNING: Pretrained model in [experiments/EMDiffuse-n/2720_Network.pth] is not existed, Skip it
+24-02-08 15:00:44.791 - WARNING: Pretrained model in [experiments/EMDiffuse-n/2720_Network.pth] is not existed, Skip it
+24-02-08 15:00:44.792 - INFO: Beign loading pretrained model [Network_ema] ...
+24-02-08 15:00:44.792 - INFO: Beign loading pretrained model [Network_ema] ...
+24-02-08 15:00:44.792 - WARNING: Pretrained model in [experiments/EMDiffuse-n/2720_Network_ema.pth] is not existed, Skip it
+24-02-08 15:00:44.792 - WARNING: Pretrained model in [experiments/EMDiffuse-n/2720_Network_ema.pth] is not existed, Skip it
+24-02-08 15:00:44.794 - INFO: Beign loading training states
+24-02-08 15:00:44.794 - INFO: Beign loading training states
+24-02-08 15:00:44.794 - WARNING: Training state in [experiments/EMDiffuse-n/2720.state] is not existed, Skip it
+24-02-08 15:00:44.794 - WARNING: Training state in [experiments/EMDiffuse-n/2720.state] is not existed, Skip it
+24-02-08 15:00:44.814 - INFO: Model [DiReP() form models.EMDiffuse_model] is created.
+24-02-08 15:00:44.814 - INFO: Model [DiReP() form models.EMDiffuse_model] is created.

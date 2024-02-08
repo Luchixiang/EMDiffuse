@@ -16,7 +16,8 @@ from utils.utils import InputPadder
 from align_functions import *
 import torch.nn.functional as F
 import os
-from  tifffile import imwrite
+from tifffile import imwrite
+
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 DEVICE = 'cpu'
@@ -195,7 +196,8 @@ def viz(img, flo):
     cv2.waitKey()
 
 
-def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, patch_size=256, stride=224, model=None):
+def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, patch_size=256, stride=224, model=None,
+                 board=32):
     wf_img_origin = cv2.cvtColor(wf_img, cv2.COLOR_BGR2GRAY)
     gt_img_origin = cv2.cvtColor(gt_img, cv2.COLOR_BGR2GRAY)
     wf_img = wf_img_origin[gt_img_origin.shape[0] // 2 - gt_img_origin.shape[0] // 4:  gt_img_origin.shape[0] // 2 +
@@ -213,18 +215,15 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, pa
     H = align_images(wf_img, gt_img, debug=False)
     h, w = gt_img.shape
     aligned = cv2.warpPerspective(wf_img, H, (w, h))
-    path_size = 128
-    stride = 112
-    board = 32
     x = board
     x_end = wf_img.shape[0] - board
     y_end = wf_img.shape[0] - board
     count = 1
-    while x + path_size < x_end:
+    while x + patch_size < x_end:
         y = board
-        while y + path_size < y_end:
-            crop_wf_img = aligned[x - board: x + path_size + board, y - board: y + path_size + board]
-            crop_gt_img = gt_img[x - board: x + path_size + board, y - board: y + path_size + board]
+        while y + patch_size < y_end:
+            crop_wf_img = aligned[x - board: x + patch_size + board, y - board: y + patch_size + board]
+            crop_gt_img = gt_img[x - board: x + patch_size + board, y - board: y + patch_size + board]
             # crop_gt_img_bigger = gt_img[2 *x: 2 * (x + path_size + board), 2 * (y - board): 2 * (y + path_size + board)]
             H_sub = align_images(crop_wf_img, crop_gt_img)
             if H_sub is None:
@@ -252,7 +251,8 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, pa
             crop_wf_img = image_warped[0].permute(1, 2, 0).cpu().numpy()
             crop_wf_img = np.uint8(crop_wf_img[:, :, 0] * 255)
             imwrite(os.path.join(save_wf_path, str(count) + '.tif'), crop_wf_img[board:-board, board:-board])
-            imwrite(os.path.join(save_gt_path, str(count) + '.tif'), gt_img_origin[2*x: 2*x + 2* path_size, 2 * y: 2*y + 2 * path_size])
+            imwrite(os.path.join(save_gt_path, str(count) + '.tif'),
+                    gt_img_origin[2 * x: 2 * x + 2 * patch_size, 2 * y: 2 * y + 2 * patch_size])
             count += 1
             y += stride
         x += stride
@@ -295,7 +295,9 @@ def registration(args):
                 if '_04' in type or '05' in type:
                     sup_wf_img = cv2.imread(os.path.join(path, str(i), 'Brain__4w_06.tif'))
                 # print(wf_file_img.min())
-                process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path, sup_wf_img=sup_wf_img, model=model)
+                process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path, sup_wf_img=sup_wf_img, model=model,
+                             patch_size=args.patch_size, board=args.board, stride=int(args.patch_size * (1-args.overlap)))
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -306,6 +308,9 @@ if __name__ == '__main__':
     parser.add_argument('--mixed_precision', action='store_true', help='use mixed precision')
     parser.add_argument('--alternate_corr', action='store_true', help='use efficent correlation implementation')
     parser.add_argument('--occlusion', action='store_true', help='predict occlusion masks')
+    parser.add_argument('--patch_size', default=256, type=int)
+    parser.add_argument('--board', default=32, type=int)
+    parser.add_argument('--overlap', default=0.125, type=int)
 
     args = parser.parse_args()
 
