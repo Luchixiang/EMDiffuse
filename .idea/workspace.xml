@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2db1b2b-8d0f-4b38-a416-8f030a04cdeb" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EMDiffuse-n training demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/example/denoise/training.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EMDiffuse-n-prediction.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/example/denoise/prediction.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiments/test_EMDiffuse-n_240208_145955/tb_logger/events.out.tfevents.1707375596.JASPERLCXLU-MB0" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/test_EMDiffuse-n_240208_145955/tb_logger/events.out.tfevents.1707375596.JASPERLCXLU-MB0" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiments/test_EMDiffuse-n_240208_150125/tb_logger/events.out.tfevents.1707375685.JASPERLCXLU-MB0" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/test_EMDiffuse-n_240208_150125/tb_logger/events.out.tfevents.1707375685.JASPERLCXLU-MB0" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiments/test_EMDiffuse-n_240208_150136/tb_logger/events.out.tfevents.1707375696.JASPERLCXLU-MB0" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/test_EMDiffuse-n_240208_150136/tb_logger/events.out.tfevents.1707375696.JASPERLCXLU-MB0" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiments/train_EMDiffuse-n_240208_130412/tb_logger/events.out.tfevents.1707368653.JASPERLCXLU-MB0" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/train_EMDiffuse-n_240208_130412/tb_logger/events.out.tfevents.1707368653.JASPERLCXLU-MB0" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiments/train_EMDiffuse-n_240208_130412/tb_logger/events.out.tfevents.1707369615.JASPERLCXLU-MB0" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/train_EMDiffuse-n_240208_130412/tb_logger/events.out.tfevents.1707369615.JASPERLCXLU-MB0" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiments/train_EMDiffuse-n_240208_150044/tb_logger/events.out.tfevents.1707375644.JASPERLCXLU-MB0" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/train_EMDiffuse-n_240208_150044/tb_logger/events.out.tfevents.1707375644.JASPERLCXLU-MB0" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/denoise/prediction.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/example/denoise/prediction.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -229,7 +221,7 @@
       <workItem from="1706514315500" duration="820000" />
       <workItem from="1706515284278" duration="16877000" />
       <workItem from="1707100933941" duration="33000" />
-      <workItem from="1707243870645" duration="18213000" />
+      <workItem from="1707243870645" duration="18217000" />
     </task>
     <servers />
   </component>
