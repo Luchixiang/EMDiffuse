@@ -2,38 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2db1b2b-8d0f-4b38-a416-8f030a04cdeb" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/RAFT/core/raftConfig.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/crop_single2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/emdiffuse_conifg.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradio_run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RAFT/core/optical_flow_registration.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RAFT/core/register.py" beforeDir="false" afterPath="$PROJECT_DIR$/RAFT/core/register.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RAFT/core/register_single.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RAFT/core/register_single_noise_level_self.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RAFT/core/register_single_noiselevel.py" beforeDir="false" afterPath="$PROJECT_DIR$/RAFT/core/register_custom.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RAFT/core/super-res-register.py" beforeDir="false" afterPath="$PROJECT_DIR$/RAFT/core/super-res-register.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bioimage_zoo.py" beforeDir="false" afterPath="$PROJECT_DIR$/bioimage_zoo.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/EMDiffuse-n-big.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/EMDiffuse-n-big.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/EMDiffuse-n-jit.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/EMDiffuse-n-jit.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/EMDiffuse-n.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/EMDiffuse-n.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/base_network.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/base_network.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/praser.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/praser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crop_single_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/crop_single_file.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/27.tif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/64.tif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo/9.tif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/EMDiffuse_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/EMDiffuse_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/EMDiffuse_network.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/EMDiffuse_network.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/EMDiffuse_network_jit.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/EMDiffuse_network_jit.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/vEMDiffuse_network.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/vEMDiffuse_network.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modify_weight_keys.py" beforeDir="false" afterPath="$PROJECT_DIR$/modify_weight_keys.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EMDiffuse-n training demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/example/denoise/training.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EMDiffuse-n-prediction.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/example/denoise/prediction.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/test_EMDiffuse-n_240208_145955/tb_logger/events.out.tfevents.1707375596.JASPERLCXLU-MB0" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/test_EMDiffuse-n_240208_145955/tb_logger/events.out.tfevents.1707375596.JASPERLCXLU-MB0" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/test_EMDiffuse-n_240208_150125/tb_logger/events.out.tfevents.1707375685.JASPERLCXLU-MB0" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/test_EMDiffuse-n_240208_150125/tb_logger/events.out.tfevents.1707375685.JASPERLCXLU-MB0" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/test_EMDiffuse-n_240208_150136/tb_logger/events.out.tfevents.1707375696.JASPERLCXLU-MB0" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/test_EMDiffuse-n_240208_150136/tb_logger/events.out.tfevents.1707375696.JASPERLCXLU-MB0" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/train_EMDiffuse-n_240208_130412/tb_logger/events.out.tfevents.1707368653.JASPERLCXLU-MB0" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/train_EMDiffuse-n_240208_130412/tb_logger/events.out.tfevents.1707368653.JASPERLCXLU-MB0" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/train_EMDiffuse-n_240208_130412/tb_logger/events.out.tfevents.1707369615.JASPERLCXLU-MB0" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/train_EMDiffuse-n_240208_130412/tb_logger/events.out.tfevents.1707369615.JASPERLCXLU-MB0" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/train_EMDiffuse-n_240208_150044/tb_logger/events.out.tfevents.1707375644.JASPERLCXLU-MB0" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/train_EMDiffuse-n_240208_150044/tb_logger/events.out.tfevents.1707375644.JASPERLCXLU-MB0" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -79,6 +56,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/example/denoise" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/RAFT/core" />
     </key>
@@ -251,7 +229,7 @@
       <workItem from="1706514315500" duration="820000" />
       <workItem from="1706515284278" duration="16877000" />
       <workItem from="1707100933941" duration="33000" />
-      <workItem from="1707243870645" duration="17476000" />
+      <workItem from="1707243870645" duration="18213000" />
     </task>
     <servers />
   </component>
