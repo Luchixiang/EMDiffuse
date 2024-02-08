@@ -3,8 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="b2db1b2b-8d0f-4b38-a416-8f030a04cdeb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RAFT/core/raftConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/RAFT/core/raftConfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/denoise/.ipynb_checkpoints/training-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/example/denoise/.ipynb_checkpoints/training-checkpoint.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example/denoise/training.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/example/denoise/training.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -223,7 +224,7 @@
       <workItem from="1706514315500" duration="820000" />
       <workItem from="1706515284278" duration="16877000" />
       <workItem from="1707100933941" duration="33000" />
-      <workItem from="1707243870645" duration="18313000" />
+      <workItem from="1707243870645" duration="18421000" />
     </task>
     <servers />
   </component>

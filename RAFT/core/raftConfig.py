@@ -5,7 +5,7 @@ class RaftConfig:
         self.board = board
         self.tissue = tissue
         self.small = False
-        self.model = 'Raft/models/raft-things.pth'
+        self.model = 'RAFT/models/raft-things.pth'
         self.overlap = overlap
         self.mixed_precision = False
         self.alternate_corr = False
