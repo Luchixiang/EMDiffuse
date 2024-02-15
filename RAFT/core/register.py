@@ -238,7 +238,7 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, pa
             crop_wf_img = image_warped[0].permute(1, 2, 0).cpu().numpy()
             crop_wf_img = np.uint8(crop_wf_img[:, :, 0] * 255)
             if np.sum(crop_wf_img[board:-board, board:-board] == 0) > 10:
-                print(f'after optical flow warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[board:-board, board:-board] == 0)}')
+                # print(f'after optical flow warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[board:-board, board:-board] == 0)}')
                 count += 1
                 y += stride
                 continue
@@ -287,7 +287,6 @@ def registration(args):
                 sup_wf_img = None
                 if '_04' in type or '05' in type :
                     if tissue == 'Brain':
-                        print('using clean image to help register')
                         sup_wf_img = cv2.imread(os.path.join(path, str(i), tissue + '__4w_06.tif'))
                 # print(wf_file_img.min())
                 process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path, sup_wf_img=sup_wf_img, model=model,

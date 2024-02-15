@@ -1,5 +1,0 @@
-24-02-08 12:22:03.025 - INFO: Create the log file in directory experiments/train_EMDiffuse-n_240208_122200.
-
-24-02-08 12:22:03.038 - INFO: Dataset [EMDiffusenDataset() form data.dataset] is created.
-24-02-08 12:22:03.039 - INFO: Dataset for train have 0 samples.
-24-02-08 12:22:03.040 - INFO: Dataset for val have 0 samples.
