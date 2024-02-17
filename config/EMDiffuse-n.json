@@ -60,7 +60,7 @@
             "dataloader":{
                 "args":{
                     "batch_size": 8,
-                    "num_workers": 4,
+                    "num_workers": 0,
                     "pin_memory": true
                 }
             }
