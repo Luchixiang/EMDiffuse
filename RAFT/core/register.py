@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append('core')
 import argparse
 import torch
@@ -9,6 +10,7 @@ from align_functions import *
 import torch.nn.functional as F
 import os
 from tifffile import imwrite
+
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 DEVICE = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
@@ -186,7 +188,8 @@ def viz(img, flo):
     cv2.waitKey()
 
 
-def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, patch_size=256, stride=224, model=None, board=32):
+def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, patch_size=256, stride=224, model=None,
+                 board=32):
     wf_img = cv2.cvtColor(wf_img, cv2.COLOR_BGR2GRAY)
     gt_img = cv2.cvtColor(gt_img, cv2.COLOR_BGR2GRAY)
     (h, w) = gt_img.shape[:2]
@@ -285,12 +288,13 @@ def registration(args):
                 gt_file_img = cv2.imread(os.path.join(path, str(i), tissue + '__4w_09.tif'))
                 wf_file_img = cv2.imread(os.path.join(path, str(i), type))
                 sup_wf_img = None
-                if '_04' in type or '05' in type :
+                if '_04' in type or '05' in type:
                     if tissue == 'Brain':
                         sup_wf_img = cv2.imread(os.path.join(path, str(i), tissue + '__4w_06.tif'))
                 # print(wf_file_img.min())
                 process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path, sup_wf_img=sup_wf_img, model=model,
-                             patch_size=args.patch_size, stride=int(args.patch_size * (1-args.overlap)), board=args.board)
+                             patch_size=args.patch_size, stride=int(args.patch_size * (1 - args.overlap)),
+                             board=args.board)
 
 
 if __name__ == '__main__':

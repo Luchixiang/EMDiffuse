@@ -113,6 +113,8 @@ def parse(args):
         opt['datasets'][opt['phase']]['which_dataset']['args']['data_root'] = args.path
     if args.z_times is not None:
         opt['datasets'][opt['phase']]['which_dataset']['args']['z_times'] = args.z_times
+    if args.lr is not None:
+        opt['model']['which_model']['optimizers']['lr'] = args.lr
     ''' set cuda environment '''
     if len(opt['gpu_ids']) > 1:
         opt['distributed'] = True
