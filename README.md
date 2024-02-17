@@ -76,7 +76,7 @@ You should replace the argument  `--path` with the file path you place the datas
 Model Training. Please change the file path in line 23 of the config file. 
 
 ```python
-python run.py -c config/EMDiffuse-n.json -b 16 -gpu 0,1,2,3 --port 20022 --path /data/EMDiffuse_dataset/brain_train/denoise/train_wf
+python run.py -c config/EMDiffuse-n.json -b 16 --gpu 0,1,2,3 --port 20022 --path /data/EMDiffuse_dataset/brain_train/denoise/train_wf
 ```
 
 The model weight will be saved in experiments.
@@ -127,7 +127,7 @@ python super-res-register.py --path /data/EMDiffuse_dataset/brain_train
 Model Training
 
 ```python
-python run.py -c config/EMDiffuse-n.json -b 16 -gpu 0,1,2,3 --port 20022 --path /data/EMDiffuse_dataset/brain_train/zoom/train_wf
+python run.py -c config/EMDiffuse-n.json -b 16 --gpu 0,1,2,3 --port 20022 --path /data/EMDiffuse_dataset/brain_train/zoom/train_wf
 ```
 
 ### Inference
@@ -195,7 +195,7 @@ Vem_data
 #### Training vEMDiffuse-i
 For vEMDiffuse-i, the training data must be isotropic. 
 ```
-python run.py -c config/vEMDiffuse-i.json -b 16 -gpu 0,1,2,3 --port 20022 --path ./Vem_data -z 5
+python run.py -c config/vEMDiffuse-i.json -b 16 --gpu 0,1,2,3 --port 20022 --path ./Vem_data -z 5
 ```
 
 Where parameter ``-z`` means the number of layers you want the model to learn to generate. For 8 nm * 8 nm * 48 nm, you should generate 5 layers to achieve 8 nm * 8 nm * 8nm voxel size.
@@ -205,7 +205,7 @@ Where parameter ``-z`` means the number of layers you want the model to learn to
 For vEMDiffuse-a, the training data can be anisotropic. The vEMa_pre.py firstly slices your volume along the lateral (Y axis) to construct the training data. The model learns the lateral information and applys it to improve axial resolution. 
  ```
  python vEMa_pre.py --path ./Vem_data
- python run.py -c config/vEMDiffuse-a.json -b 16 -gpu 0,1,2,3 --port 20022 --path ./Vem_data/transposed -z 5
+ python run.py -c config/vEMDiffuse-a.json -b 16 --gpu 0,1,2,3 --port 20022 --path ./Vem_data/transposed -z 5
  ```
 
 ### Testing 

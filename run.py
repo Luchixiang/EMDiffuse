@@ -11,8 +11,7 @@ from data import define_dataloader
 from models import create_model, define_network, define_loss, define_metric
 
 
-def main_worker(opt):
-    gpu = 0
+def main_worker(gpu, ngpus_per_node, opt):
     """  threads running on each GPU """
     if 'local_rank' not in opt:
         opt['local_rank'] = opt['global_rank'] = gpu
@@ -71,7 +70,7 @@ if __name__ == '__main__':
     parser.add_argument('--path', type=str, default=None, help='patch of cropped patches')
     parser.add_argument('-p', '--phase', type=str, choices=['train', 'test'], help='Run train or test', default='train')
     parser.add_argument('-b', '--batch', type=int, default=None, help='Batch size in every gpu')
-    parser.add_argument('-gpu', '--gpu_ids', type=str, default=None)
+    parser.add_argument('--gpu', type=str, default=None)
     parser.add_argument('-d', '--debug', action='store_true')
     parser.add_argument('-z', '--z_times', default=None, type=int)
     parser.add_argument('-P', '--port', default='21012', type=str)
