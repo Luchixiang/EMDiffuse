@@ -45,7 +45,8 @@ class BaseModel():
 
             train_log = self.train_step()
 
-            ''' save logged informations into log dict ''' 
+            ''' save logged informations into log dict '''
+            print('epoch {}: training start'.format(self.epoch))
             train_log.update({'epoch': self.epoch, 'iters': self.iter})
 
             ''' print logged informations to the screen and tensorboard ''' 

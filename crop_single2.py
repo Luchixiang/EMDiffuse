@@ -16,14 +16,14 @@ def process_denoise_pair(wf_img, save_wf_path, path_size=256, stride=224):
     # print(wf_image.shape)
     if len(wf_img.shape) > 2:
         wf_img = cv2.cvtColor(wf_img, cv2.COLOR_BGR2GRAY)
-    board = 0
-    x = board
-    x_end = wf_img.shape[0] - board
-    y_end = wf_img.shape[0] - board
+    border = 0
+    x = border
+    x_end = wf_img.shape[0] - border
+    y_end = wf_img.shape[0] - border
     count = 0
     row = 0
     while x + path_size < x_end:
-        y = board
+        y = border
         col = 0
         while y + path_size < y_end:
             crop_wf_img = wf_img[x: x + path_size, y : y + path_size]

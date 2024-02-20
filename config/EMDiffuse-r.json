@@ -1,5 +1,5 @@
 {
-    "name": "EMDiffuse-n", // experiments name
+    "name": "EMDiffuse-r", // experiments name
     "norm": true,
     "percent": false,
     "gpu_ids": [0, 1], // gpu ids list, default is single 0
@@ -12,8 +12,8 @@
         "tb_logger": "tb_logger", // path of tensorboard logger
         "results": "results",
         "checkpoint": "checkpoint",
-        "resume_state": "experiments/train_EMDiffuse-n-large_240125_221819/5180_jit" // checkpoint path, set to null if used for training
-//        "resume_state": "experiments/EMDiffuse-n/2720_jit" // checkpoint path, set to null if used for training
+//        "resume_state": "experiments/train_EMDiffuse-n_230712_163715/checkpoint/2720" // checkpoint path, set to null if used for training
+        "resume_state": "experiments/EMDiffuse-n/2720" // checkpoint path, set to null if used for training
 //        "resume_state": null // checkpoint path, set to null if used for training
     },
 
@@ -29,7 +29,7 @@
                 }
             },
             "dataloader":{
-                "validation_split": 20, // percent or number
+                "validation_split": 0.1, // percent or number
                 "args":{ // arguments to initialize train_dataloader
                     "batch_size": 3, // batch size in each gpu
                     "num_workers": 4,
@@ -60,7 +60,7 @@
             "dataloader":{
                 "args":{
                     "batch_size": 8,
-                    "num_workers": 4,
+                    "num_workers": 0,
                     "pin_memory": true
                 }
             }
@@ -85,11 +85,10 @@
         },
         "which_networks": [ // import designated list of networks using arguments
             {
-                "name": ["models.EMDiffuse_network_jit", "Network"],  // import Network() class / function(not recommend) from default file (default is [models/EMDiffuse_network.py])
+                "name": ["models.EMDiffuse_network", "Network"],  // import Network() class / function(not recommend) from default file (default is [models/EMDiffuse_network.py])
                 "args": { // arguments to initialize network
                     "init_type": "kaiming", // method can be [normal | xavier| xavier_uniform | kaiming | orthogonal], default is kaiming
-//                    "module_name": "guided_diffusion", // sr3 | guided_diffusion
-                    "module_name": "jit", // sr3 | guided_diffusion
+                    "module_name": "guided_diffusion", // sr3 | guided_diffusion
                     "norm": true,
                     "unet": {
                         "in_channel": 2,

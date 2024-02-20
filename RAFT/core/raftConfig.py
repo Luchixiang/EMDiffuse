@@ -1,8 +1,8 @@
 class RaftConfig:
-    def __init__(self, path, patch_size=256, board=32, tissue='Brain', overlap=0.125):
+    def __init__(self, path, patch_size=256, border=32, tissue='Brain', overlap=0.125):
         self.path = path
         self.patch_size = patch_size
-        self.board = board
+        self.border = border
         self.tissue = tissue
         self.small = False
         self.model = 'RAFT/models/raft-things.pth'

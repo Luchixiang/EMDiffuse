@@ -1,5 +1,5 @@
 {
-    "name": "Liver_training",
+    "name": "vEMDiffuse-i",
     // experiments name
     "norm": true,
     "percent": false,
@@ -23,8 +23,8 @@
         // path of tensorboard logger
         "results": "results",
         "checkpoint": "checkpoint",
-        "resume_state": "experiments/emdiffusie-i-liver/1260"
-        //        "resume_state": null // ex: 100, loading .state  and .pth from given epoch and iteration
+//        "resume_state": "experiments/vEMDiffuse-i/1260"
+        "resume_state": null // ex: 100, loading .state  and .pth from given epoch and iteration
     },
     "datasets": {
         // train or test
@@ -71,7 +71,7 @@
         },
         "test": {
             "which_dataset": {
-                "name": "vEMDiffuseTestIsotropic",
+                "name": "vEMDiffuseTestAnIsotropic",
                 // import Dataset() class / function(not recommend) from default file
                 "args": {
                     "data_root": "/data/cxlu/liver_3d_test_patches",

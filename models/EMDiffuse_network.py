@@ -14,8 +14,6 @@ class Network(BaseNetwork):
         from .guided_diffusion_modules.unet import UNet
         self.denoise_fn = UNet(**unet)
         self.beta_schedule = beta_schedule
-        print('network norm:', norm)
-
         self.norm = norm
 
     def set_loss(self, loss_fn):
@@ -93,7 +91,6 @@ class Network(BaseNetwork):
             if t[0] < (self.num_timesteps * 0.2):
                 mean_diff = model_mean.view(model_mean.size(0), -1).mean(1) - y_cond.view(y_cond.size(0), -1).mean(1)
                 mean_diff = mean_diff.view(model_mean.size(0), 1, 1, 1)
-                # print(mean_diff.shape, model_mean.shape, mean_diff.repeat((1, model_mean.shape[1], model_mean.shape[2], model_mean.shape[3])).shape)
                 model_mean = model_mean - 0.5 * mean_diff.repeat(
                     (1, model_mean.shape[1], model_mean.shape[2], model_mean.shape[3]))
         return model_mean + noise * (0.5 * model_log_variance).exp(), y_0_hat

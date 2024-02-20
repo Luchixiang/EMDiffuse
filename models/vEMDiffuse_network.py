@@ -16,7 +16,6 @@ class Network(BaseNetwork):
 
         self.denoise_fn = UNet(**unet)
         self.beta_schedule = beta_schedule
-        print('network norm:', norm)
 
         self.norm = norm
 

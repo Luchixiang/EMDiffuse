@@ -1,17 +1,18 @@
 class EMDiffuseConfig():
 
-    def __init__(self, config, path, phase, batch_size, lr=5e-5, resume=None, gpu='0', z_times=None, port='21012', mean=2):
+    def __init__(self, config, path, phase, batch_size, lr=5e-5, resume=None, gpu='0', subsample=None, port='21012', mean=2, step=None):
         self.path = path
         self.config = config
         self.phase = phase
-        self.batch_size = batch_size
+        self.batch = batch_size
         self.gpu = gpu
         self.debug = False
-        self.z_times = z_times
+        self.z_times = subsample
         self.port = port
-        self.resume = None
+        self.resume = resume
         self.mean = mean
         self.lr = lr
+        self.step=step
 
     def __getattr__(self, item):
         # This method is called when an attribute access is attempted.

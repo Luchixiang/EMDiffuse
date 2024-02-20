@@ -19,8 +19,7 @@ import os
 from tifffile import imwrite
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
-
-DEVICE = 'cpu'
+DEVICE = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
 
 def image_resize(image, width=None, height=None, inter=cv2.INTER_AREA):
@@ -98,76 +97,9 @@ def warp(x, flo):
     vgrid[:, 1, :, :] = 2.0 * vgrid[:, 1, :, :].clone() / max(H - 1, 1) - 1.0
 
     vgrid = vgrid.permute(0, 2, 3, 1)
-    output = F.grid_sample(x, vgrid)
-    mask = torch.ones(x.size()).to(DEVICE)
-    mask = F.grid_sample(mask, vgrid)
-
-    mask[mask < 0.999] = 0
-    mask[mask > 0] = 1
-
+    output = F.grid_sample(x, vgrid, align_corners=False)
     return output
 
-
-def compute_flow_magnitude(flow):
-    flow_mag = flow[:, :, 0] ** 2 + flow[:, :, 1] ** 2
-
-    return flow_mag
-
-
-def compute_flow_gradients(flow):
-    H = flow.shape[0]
-    W = flow.shape[1]
-
-    flow_x_du = np.zeros((H, W))
-    flow_x_dv = np.zeros((H, W))
-    flow_y_du = np.zeros((H, W))
-    flow_y_dv = np.zeros((H, W))
-
-    flow_x = flow[:, :, 0]
-    flow_y = flow[:, :, 1]
-
-    flow_x_du[:, :-1] = flow_x[:, :-1] - flow_x[:, 1:]
-    flow_x_dv[:-1, :] = flow_x[:-1, :] - flow_x[1:, :]
-    flow_y_du[:, :-1] = flow_y[:, :-1] - flow_y[:, 1:]
-    flow_y_dv[:-1, :] = flow_y[:-1, :] - flow_y[1:, :]
-
-    return flow_x_du, flow_x_dv, flow_y_du, flow_y_dv
-
-
-def detect_occlusion(fw_flow, bw_flow):
-    ## fw-flow: img1 => img2, tensor N,C,H,W
-    ## bw-flow: img2 => img1, tensor N,C,H,W
-
-    with torch.no_grad():
-        ## warp fw-flow to img2
-        fw_flow_w = warp(fw_flow, bw_flow)
-
-        ## convert to numpy array
-        fw_flow_w = tensor2img(fw_flow_w)
-        fw_flow = tensor2img(fw_flow)
-        bw_flow = tensor2img(bw_flow)
-
-    ## occlusion
-    fb_flow_sum = fw_flow_w + bw_flow
-    fb_flow_mag = compute_flow_magnitude(fb_flow_sum)
-    fw_flow_w_mag = compute_flow_magnitude(fw_flow_w)
-    bw_flow_mag = compute_flow_magnitude(bw_flow)
-
-    mask1 = fb_flow_mag > 0.01 * (fw_flow_w_mag + bw_flow_mag) + 0.5
-
-    ## motion boundary
-    fx_du, fx_dv, fy_du, fy_dv = compute_flow_gradients(bw_flow)
-    fx_mag = fx_du ** 2 + fx_dv ** 2
-    fy_mag = fy_du ** 2 + fy_dv ** 2
-
-    mask2 = (fx_mag + fy_mag) > 0.01 * bw_flow_mag + 0.002
-
-    ## combine mask
-    mask = np.logical_or(mask1, mask2)
-    occlusion = np.zeros((fw_flow.shape[0], fw_flow.shape[1]))
-    occlusion[mask == 1] = 1
-
-    return occlusion
 
 
 ###########################
@@ -179,25 +111,8 @@ def load_image(img):
     img = torch.from_numpy(img).permute(2, 0, 1).float()
     return img[None].to(DEVICE)
 
-
-def viz(img, flo):
-    img = img[0].permute(1, 2, 0).cpu().numpy()
-    flo = flo[0].permute(1, 2, 0).cpu().numpy()
-
-    # map flow to rgb image
-    flo = flow_viz.flow_to_image(flo)
-    img_flo = np.concatenate([img, flo], axis=0)
-
-    import matplotlib.pyplot as plt
-    plt.imshow(img_flo / 255.0)
-    plt.show()
-
-    cv2.imshow('image', img_flo[:, :, [2, 1, 0]] / 255.0)
-    cv2.waitKey()
-
-
 def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, patch_size=256, stride=224, model=None,
-                 board=32):
+                 border=32):
     wf_img_origin = cv2.cvtColor(wf_img, cv2.COLOR_BGR2GRAY)
     gt_img_origin = cv2.cvtColor(gt_img, cv2.COLOR_BGR2GRAY)
     wf_img = wf_img_origin[gt_img_origin.shape[0] // 2 - gt_img_origin.shape[0] // 4:  gt_img_origin.shape[0] // 2 +
@@ -215,28 +130,24 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, pa
     H = align_images(wf_img, gt_img, debug=False)
     h, w = gt_img.shape
     aligned = cv2.warpPerspective(wf_img, H, (w, h))
-    x = board
-    x_end = wf_img.shape[0] - board
-    y_end = wf_img.shape[0] - board
+    x = border
+    x_end = wf_img.shape[0] - border
+    y_end = wf_img.shape[0] - border
     count = 1
     while x + patch_size < x_end:
-        y = board
+        y = border
         while y + patch_size < y_end:
-            crop_wf_img = aligned[x - board: x + patch_size + board, y - board: y + patch_size + board]
-            crop_gt_img = gt_img[x - board: x + patch_size + board, y - board: y + patch_size + board]
-            # crop_gt_img_bigger = gt_img[2 *x: 2 * (x + path_size + board), 2 * (y - board): 2 * (y + path_size + board)]
+            crop_wf_img = aligned[x - border: x + patch_size + border, y - border: y + patch_size + border]
+            crop_gt_img = gt_img[x - border: x + patch_size + border, y - border: y + patch_size + border]
             H_sub = align_images(crop_wf_img, crop_gt_img)
             if H_sub is None:
-                print(f'can not align{count}, {save_wf_path}')
+                count += 1
+                y += stride
+                continue
             else:
-                # print(count)
-                # print(H_sub)
                 (h_sub, w_sub) = crop_gt_img.shape[:2]
                 crop_wf_img = cv2.warpPerspective(crop_wf_img, H_sub, (w_sub, h_sub))
-                # print(crop_wf_img[board:-board, board:-board].min())
-                # print(np.sum(crop_wf_img == 0))
-                if np.sum(crop_wf_img[board:-board, board:-board] == 0) > 10:
-                    # print(f'warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[board:-board, board:-board] == 0)}')
+                if np.sum(crop_wf_img[border:-border, border:-border] == 0) > 10:
                     count += 1
                     y += stride
                     continue
@@ -250,12 +161,11 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, pa
             image_warped = warp(image2 / 255.0, flow_up)
             crop_wf_img = image_warped[0].permute(1, 2, 0).cpu().numpy()
             crop_wf_img = np.uint8(crop_wf_img[:, :, 0] * 255)
-            if np.sum(crop_wf_img[board:-board, board:-board] == 0) > 10:
-                # print(f'after optical flow warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[board:-board, board:-board] == 0)}')
+            if np.sum(crop_wf_img[border:-border, border:-border] == 0) > 10:
                 count += 1
                 y += stride
                 continue
-            imwrite(os.path.join(save_wf_path, str(count) + '.tif'), crop_wf_img[board:-board, board:-board])
+            imwrite(os.path.join(save_wf_path, str(count) + '.tif'), crop_wf_img[border:-border, border:-border])
             imwrite(os.path.join(save_gt_path, str(count) + '.tif'),
                     gt_img_origin[2 * x: 2 * x + 2 * patch_size, 2 * y: 2 * y + 2 * patch_size])
             count += 1
@@ -286,10 +196,11 @@ def registration(args):
                 continue
             roi_wf_path = os.path.join(train_wf_path, str(i))
             roi_gt_path = os.path.join(train_gt_path, str(i))
+            
             mkdir(roi_wf_path)
             mkdir(roi_gt_path)
             for type in image_types:
-                print(f'processing{i}, {type}')
+                print(f'processing image {i}, {type}')
                 save_wf_path = os.path.join(roi_wf_path, type[:-4])
                 save_gt_path = os.path.join(roi_gt_path, type[:-4])
                 mkdir(save_wf_path)
@@ -299,7 +210,7 @@ def registration(args):
                 sup_wf_img = None
                 # print(wf_file_img.min())
                 process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path, sup_wf_img=sup_wf_img, model=model,
-                             patch_size=args.patch_size, board=args.board, stride=int(args.patch_size * (1-args.overlap)))
+                             patch_size=args.patch_size, border=args.border, stride=int(args.patch_size * (1-args.overlap)))
 
 
 if __name__ == '__main__':
@@ -312,7 +223,7 @@ if __name__ == '__main__':
     parser.add_argument('--alternate_corr', action='store_true', help='use efficent correlation implementation')
     parser.add_argument('--occlusion', action='store_true', help='predict occlusion masks')
     parser.add_argument('--patch_size', default=128, type=int)
-    parser.add_argument('--board', default=32, type=int)
+    parser.add_argument('--border', default=32, type=int)
     parser.add_argument('--overlap', default=0.125, type=int)
 
     args = parser.parse_args()

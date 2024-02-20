@@ -187,22 +187,22 @@ def viz(img, flo):
     cv2.waitKey()
 
 
-def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, patch_size=256, stride=224, model=None, board=32):
+def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, patch_size=256, stride=224, model=None, border=32):
     wf_img = cv2.cvtColor(wf_img, cv2.COLOR_BGR2GRAY)
     gt_img = cv2.cvtColor(gt_img, cv2.COLOR_BGR2GRAY)
     (h, w) = gt_img.shape[:2]
 
     H = align_images(wf_img, gt_img)
     aligned = cv2.warpPerspective(wf_img, H, (w, h))
-    x = board
-    x_end = wf_img.shape[0] - board
-    y_end = wf_img.shape[0] - board
+    x = border
+    x_end = wf_img.shape[0] - border
+    y_end = wf_img.shape[0] - border
     count = 1
     while x + patch_size < x_end:
-        y = board
+        y = border
         while y + patch_size < y_end:
-            crop_wf_img = aligned[x - board: x + patch_size + board, y - board: y + patch_size + board]
-            crop_gt_img = gt_img[x - board: x + patch_size + board, y - board: y + patch_size + board]
+            crop_wf_img = aligned[x - border: x + patch_size + border, y - border: y + patch_size + border]
+            crop_gt_img = gt_img[x - border: x + patch_size + border, y - border: y + patch_size + border]
             try:
                 H_sub = align_images(crop_wf_img, crop_gt_img)
             except:
@@ -215,8 +215,8 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, patch_size=256, str
             else:
                 (h_sub, w_sub) = crop_gt_img.shape[:2]
                 crop_wf_img = cv2.warpPerspective(crop_wf_img, H_sub, (w_sub, h_sub))
-                if np.sum(crop_wf_img[board:-board, board:-board] == 0) > 10:
-                    print(f'warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[board:-board, board:-board] == 0)}')
+                if np.sum(crop_wf_img[border:-border, border:-border] == 0) > 10:
+                    print(f'warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[border:-border, border:-border] == 0)}')
                     count += 1
                     y += stride
                     continue
@@ -226,19 +226,19 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, patch_size=256, str
             image_warped = warp(image2 / 255.0, flow_up)
             crop_wf_img = image_warped[0].permute(1, 2, 0).cpu().numpy()
             crop_wf_img = np.uint8(crop_wf_img[:, :, 0] * 255)
-            if np.sum(crop_wf_img[board:-board, board:-board] == 0) > 10:
-                print(f'after optical flow warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[board:-board, board:-board] == 0)}')
+            if np.sum(crop_wf_img[border:-border, border:-border] == 0) > 10:
+                print(f'after optical flow warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[border:-border, border:-border] == 0)}')
                 count += 1
                 y += stride
                 continue
-            imwrite(os.path.join(save_wf_path, str(count) + '.tif'), crop_wf_img[board:-board, board:-board])
-            imwrite(os.path.join(save_gt_path, str(count) + '.tif'), crop_gt_img[board:-board, board:-board])
+            imwrite(os.path.join(save_wf_path, str(count) + '.tif'), crop_wf_img[border:-border, border:-border])
+            imwrite(os.path.join(save_gt_path, str(count) + '.tif'), crop_gt_img[border:-border, border:-border])
             count += 1
             y += stride
         x += stride
 
 
-def registration(args, img_list, gt_list, patch_size=256, overlap=0.125,board=32):
+def registration(args, img_list, gt_list, patch_size=256, overlap=0.125,border=32):
     model = torch.nn.DataParallel(RAFT(args))
     model.load_state_dict(torch.load(args.model, map_location='cpu'))
 
@@ -271,7 +271,7 @@ def registration(args, img_list, gt_list, patch_size=256, overlap=0.125,board=32
             gt_file_img = cv2.imread(img_list[img_count])
             wf_file_img = cv2.imread(gt_list[img_count])
             process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path, model=model,
-                         patch_size=patch_size, stride=int(patch_size * (1-overlap)), board=board)
+                         patch_size=patch_size, stride=int(patch_size * (1-overlap)), border=border)
 
 
 if __name__ == '__main__':
@@ -285,7 +285,7 @@ if __name__ == '__main__':
     parser.add_argument('--alternate_corr', action='store_true', help='use efficent correlation implementation')
     parser.add_argument('--occlusion', action='store_true', help='predict occlusion masks')
     parser.add_argument('--patch_size', default=256, type=int)
-    parser.add_argument('--board', default=32, type=int)
+    parser.add_argument('--border', default=32, type=int)
     parser.add_argument('--overlap', default=0.125, type=int)
 
     args = parser.parse_args()
@@ -294,4 +294,4 @@ if __name__ == '__main__':
     for file in os.listdir(os.path.join(args.path, 'img')):
         img_list.append(os.path.join(args.path, 'img', file))
         gt_list.append(os.path.join(args.path, 'gt'. file))
-    registration(args, img_list, gt_list, patch_size=args.patch_size, overlap=args.overlap, board=args.board)
+    registration(args, img_list, gt_list, patch_size=args.patch_size, overlap=args.overlap, border=args.border)

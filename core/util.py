@@ -27,17 +27,7 @@ def tensor2img(tensor, out_type=np.uint8, min_max=(-1, 1), norm=True):
         img_np = tensor.numpy()
     else:
         raise TypeError('Only support 4D, 3D and 2D tensor. But received with dimension: {:d}'.format(n_dim))
-    if out_type == np.uint8:
-        if norm:
-            img_np = ((img_np + 1) * 127.5).round()
-        else:
-            img_np = (img_np * 255).round()
-    if out_type == np.uint16:
-        if norm:
-            img_np = (((img_np + 1) / 2) * 65535).round()
-        else:
-            img_np = (img_np * 65535).round()
-        # Important. Unlike matlab, numpy.unit8() WILL NOT round by default.
+    img_np = ((img_np + 1) * 127.5).round()
     return img_np.astype(out_type).squeeze()
 
 

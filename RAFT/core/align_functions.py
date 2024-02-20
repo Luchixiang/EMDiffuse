@@ -78,7 +78,6 @@ def align_images(imageGray, templateGray, maxFeatures=500, keepPercent=0.2,
         ptsA = ptsA[index, :]
         ptsB = ptsB[index, :]
     if len(matches) < 10:
-        print('can not match')
         return None
     (H, mask) = cv2.findHomography(ptsA, ptsB, method=cv2.RANSAC)
     return H

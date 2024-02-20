@@ -1,5 +1,4 @@
 import sys
-
 sys.path.append('core')
 import argparse
 import torch
@@ -90,13 +89,7 @@ def warp(x, flo):
     vgrid[:, 1, :, :] = 2.0 * vgrid[:, 1, :, :].clone() / max(H - 1, 1) - 1.0
 
     vgrid = vgrid.permute(0, 2, 3, 1)
-    output = F.grid_sample(x, vgrid)
-    mask = torch.ones(x.size()).to(DEVICE)
-    mask = F.grid_sample(mask, vgrid)
-
-    mask[mask < 0.999] = 0
-    mask[mask > 0] = 1
-
+    output = F.grid_sample(x, vgrid,align_corners=False)
     return output
 
 
@@ -126,42 +119,6 @@ def compute_flow_gradients(flow):
     return flow_x_du, flow_x_dv, flow_y_du, flow_y_dv
 
 
-def detect_occlusion(fw_flow, bw_flow):
-    ## fw-flow: img1 => img2, tensor N,C,H,W
-    ## bw-flow: img2 => img1, tensor N,C,H,W
-
-    with torch.no_grad():
-        ## warp fw-flow to img2
-        fw_flow_w = warp(fw_flow, bw_flow)
-
-        ## convert to numpy array
-        fw_flow_w = tensor2img(fw_flow_w)
-        fw_flow = tensor2img(fw_flow)
-        bw_flow = tensor2img(bw_flow)
-
-    ## occlusion
-    fb_flow_sum = fw_flow_w + bw_flow
-    fb_flow_mag = compute_flow_magnitude(fb_flow_sum)
-    fw_flow_w_mag = compute_flow_magnitude(fw_flow_w)
-    bw_flow_mag = compute_flow_magnitude(bw_flow)
-
-    mask1 = fb_flow_mag > 0.01 * (fw_flow_w_mag + bw_flow_mag) + 0.5
-
-    ## motion boundary
-    fx_du, fx_dv, fy_du, fy_dv = compute_flow_gradients(bw_flow)
-    fx_mag = fx_du ** 2 + fx_dv ** 2
-    fy_mag = fy_du ** 2 + fy_dv ** 2
-
-    mask2 = (fx_mag + fy_mag) > 0.01 * bw_flow_mag + 0.002
-
-    ## combine mask
-    mask = np.logical_or(mask1, mask2)
-    occlusion = np.zeros((fw_flow.shape[0], fw_flow.shape[1]))
-    occlusion[mask == 1] = 1
-
-    return occlusion
-
-
 ###########################
 ## raft functions
 ###########################
@@ -189,48 +146,49 @@ def viz(img, flo):
 
 
 def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, patch_size=256, stride=224, model=None,
-                 board=32):
+                 border=32):
     wf_img = cv2.cvtColor(wf_img, cv2.COLOR_BGR2GRAY)
     gt_img = cv2.cvtColor(gt_img, cv2.COLOR_BGR2GRAY)
     (h, w) = gt_img.shape[:2]
     if sup_wf_img is not None:
         sup_wf_img = cv2.cvtColor(sup_wf_img, cv2.COLOR_BGR2GRAY)
         x_offset, y_offset, _, _ = image_registration.chi2_shift(wf_img, sup_wf_img, 0.1, return_error=True)
-        print(y_offset, x_offset)
         wf_img = shift(wf_img, (y_offset, x_offset))
         H = align_images(sup_wf_img, gt_img)
         sub_aligned = cv2.warpPerspective(sup_wf_img, H, (w, h))
     else:
         H = align_images(wf_img, gt_img)
     aligned = cv2.warpPerspective(wf_img, H, (w, h))
-    x = board
-    x_end = wf_img.shape[0] - board
-    y_end = wf_img.shape[0] - board
+    x = border
+    x_end = wf_img.shape[0] - border
+    y_end = wf_img.shape[0] - border
     count = 1
     while x + patch_size < x_end:
-        y = board
+        y = border
         while y + patch_size < y_end:
-            crop_wf_img = aligned[x - board: x + patch_size + board, y - board: y + patch_size + board]
-            crop_gt_img = gt_img[x - board: x + patch_size + board, y - board: y + patch_size + board]
+            crop_wf_img = aligned[x - border: x + patch_size + border, y - border: y + patch_size + border]
+            crop_gt_img = gt_img[x - border: x + patch_size + border, y - border: y + patch_size + border]
             if sup_wf_img is not None:
-                crop_sup_wf_img = sub_aligned[x - board: x + patch_size + board, y - board: y + patch_size + board]
+                crop_sup_wf_img = sub_aligned[x - border: x + patch_size + border, y - border: y + patch_size + border]
                 H_sub = align_images(crop_sup_wf_img, crop_gt_img)
             else:
                 try:
                     H_sub = align_images(crop_wf_img, crop_gt_img)
                 except:
-                    print(f'can not align{count}, {save_wf_path}')
+                    print(f'can not align{count}, {save_wf_path}, ignore this patch')
                     count += 1
                     y += stride
                     continue
 
             if H_sub is None:
-                print(f'can not align{count}, {save_wf_path}')
+                print(f'can not align{count}, {save_wf_path}, ignore this patch')
+                count += 1
+                y += stride
+                continue
             else:
                 (h_sub, w_sub) = crop_gt_img.shape[:2]
                 crop_wf_img = cv2.warpPerspective(crop_wf_img, H_sub, (w_sub, h_sub))
-                if np.sum(crop_wf_img[board:-board, board:-board] == 0) > 10:
-                    print(f'warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[board:-board, board:-board] == 0)}')
+                if np.sum(crop_wf_img[border:-border, border:-border] == 0) > 10:
                     count += 1
                     y += stride
                     continue
@@ -240,13 +198,12 @@ def process_pair(wf_img, gt_img, save_wf_path, save_gt_path, sup_wf_img=None, pa
             image_warped = warp(image2 / 255.0, flow_up)
             crop_wf_img = image_warped[0].permute(1, 2, 0).cpu().numpy()
             crop_wf_img = np.uint8(crop_wf_img[:, :, 0] * 255)
-            if np.sum(crop_wf_img[board:-board, board:-board] == 0) > 10:
-                # print(f'after optical flow warning, {save_wf_path}, {count}, {np.sum(crop_wf_img[board:-board, board:-board] == 0)}')
+            if np.sum(crop_wf_img[border:-border, border:-border] == 0) > 10:
                 count += 1
                 y += stride
                 continue
-            imwrite(os.path.join(save_wf_path, str(count) + '.tif'), crop_wf_img[board:-board, board:-board])
-            imwrite(os.path.join(save_gt_path, str(count) + '.tif'), crop_gt_img[board:-board, board:-board])
+            imwrite(os.path.join(save_wf_path, str(count) + '.tif'), crop_wf_img[border:-border, border:-border])
+            imwrite(os.path.join(save_gt_path, str(count) + '.tif'), crop_gt_img[border:-border, border:-border])
             count += 1
             y += stride
         x += stride
@@ -280,7 +237,7 @@ def registration(args):
             for type in os.listdir(os.path.join(path, str(i))):
                 if '_09' in type or '2w' in type or not type.endswith('tif'):
                     continue
-                print(f'processing{i}, {type}')
+                print(f'processing image {i}, {type}')
                 save_wf_path = os.path.join(roi_wf_path, type[:-4])
                 save_gt_path = os.path.join(roi_gt_path, type[:-4])
                 mkdir(save_wf_path)
@@ -294,7 +251,7 @@ def registration(args):
                 # print(wf_file_img.min())
                 process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path, sup_wf_img=sup_wf_img, model=model,
                              patch_size=args.patch_size, stride=int(args.patch_size * (1 - args.overlap)),
-                             board=args.board)
+                             border=args.border)
 
 
 if __name__ == '__main__':
@@ -308,7 +265,7 @@ if __name__ == '__main__':
     parser.add_argument('--alternate_corr', action='store_true', help='use efficent correlation implementation')
     parser.add_argument('--occlusion', action='store_true', help='predict occlusion masks')
     parser.add_argument('--patch_size', default=256, type=int)
-    parser.add_argument('--board', default=32, type=int)
+    parser.add_argument('--border', default=32, type=int)
     parser.add_argument('--overlap', default=0.125, type=int)
 
     args = parser.parse_args()

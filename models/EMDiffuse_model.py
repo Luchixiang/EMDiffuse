@@ -70,7 +70,6 @@ class DiReP(BaseModel):
     def set_input(self, data):
         ''' must use set_device in tensor '''
         self.cond_image = self.set_device(data.get('cond_image'))
-        # print(self.cond_image.min(), self.cond_image.max())
         self.gt_image = self.set_device(data.get('gt_image'))
         self.mask = self.set_device(data.get('mask'))
         self.mask_image = data.get('mask_image')
@@ -99,14 +98,10 @@ class DiReP(BaseModel):
         for idx in range(self.batch_size):
             ret_path.append('GT_{}'.format(self.path[idx]))
             ret_result.append(self.gt_image[idx].detach().float().cpu())
-
             ret_path.append('Out_{}'.format(self.path[idx]))
             ret_result.append(self.output[idx].detach().float().cpu())
-
             ret_path.append('Input_{}'.format(self.path[idx]))
             ret_result.append(self.cond_image[idx].detach().float().cpu())
-            # ret_path.append('Model_Varaiance_{}'.format(self.path[idx]))
-            # ret_result.append(self.model_uncertainty[idx].detach().float().cpu())
 
         self.results_dict = self.results_dict._replace(name=ret_path, result=ret_result)
         return self.results_dict._asdict()
@@ -115,7 +110,6 @@ class DiReP(BaseModel):
         self.netG.train()
         self.train_metrics.reset()
         for train_data in self.phase_loader:
-            # print(train_data.shape)
             self.set_input(train_data)
             self.optG.zero_grad()
             loss = self.netG(self.gt_image, self.cond_image, mask=self.mask)
@@ -135,7 +129,7 @@ class DiReP(BaseModel):
                     self.EMA.update_model_average(self.netG_EMA, self.netG)
 
         for scheduler in self.schedulers:
-            scheduler.step(self.epoch)
+            scheduler.step()
         return self.train_metrics.result()
 
     def val_step(self):
@@ -186,8 +180,12 @@ class DiReP(BaseModel):
                 for i in range(self.mean):
                     output = self.model_test(self.sample_num)
                     mean_outputs.append(output)
-                self.output = torch.stack(mean_outputs, dim=0).mean(dim=0)
-                self.model_uncertainty = torch.stack(mean_outputs, dim=0).std(dim=0)
+                if self.mean > 1:
+                    self.output = torch.stack(mean_outputs, dim=0).mean(dim=0)
+                    self.model_uncertainty = torch.stack(mean_outputs, dim=0).std(dim=0)
+                else:
+                    self.output = mean_outputs[0]
+                    self.model_uncertainty = torch.zeros_like(self.output)
                 self.iter += self.batch_size
                 self.writer.set_iter(self.epoch, self.iter, phase='test')
                 for met in self.metrics:
@@ -244,4 +242,3 @@ class DiReP(BaseModel):
             network = network.module
         network.load_state_dict(torch.load(model_path, map_location=lambda storage, loc: Util.set_device(storage)),
                                 strict=strict)
-

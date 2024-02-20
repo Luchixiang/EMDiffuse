@@ -5,17 +5,20 @@ from pathlib import Path
 from datetime import datetime
 from functools import partial
 import importlib
-from types  import FunctionType
+from types import FunctionType
 import shutil
-def init_obj(opt, logger, *args, default_file_name='default file', given_module=None, init_type='Network', **modify_kwargs):
+
+
+def init_obj(opt, logger, *args, default_file_name='default file', given_module=None, init_type='Network',
+             **modify_kwargs):
     """
     finds a function handle with the name given as 'name' in config,
     and returns the instance initialized with corresponding args.
-    """ 
-    if opt is None or len(opt)<1:
+    """
+    if opt is None or len(opt) < 1:
         logger.info('Option is None when initialize {}'.format(init_type))
         return None
-    
+
     ''' default format is dict with name key '''
     if isinstance(opt, str):
         opt = {'name': opt}
@@ -35,16 +38,14 @@ def init_obj(opt, logger, *args, default_file_name='default file', given_module=
 
     attr = getattr(module, class_name)
     kwargs = opt.get('args', {})
-    if 'dataset' in default_file_name:
-        print(kwargs)
     kwargs.update(modify_kwargs)
     ''' import class or function with args '''
     if isinstance(attr, type):
         ret = attr(*args, **kwargs)
-        ret.__name__  = ret.__class__.__name__
+        ret.__name__ = ret.__class__.__name__
     elif isinstance(attr, FunctionType):
         ret = partial(attr, *args, **kwargs)
-        ret.__name__  = attr.__name__
+        ret.__name__ = attr.__name__
         # ret = attr
     logger.info('{} [{:s}() form {:s}] is created.'.format(init_type, class_name, file_name))
 
@@ -58,6 +59,7 @@ def mkdirs(paths):
         for path in paths:
             os.makedirs(path, exist_ok=True)
 
+
 def get_timestamp():
     return datetime.now().strftime('%y%m%d_%H%M%S')
 
@@ -67,9 +69,11 @@ def write_json(content, fname):
     with fname.open('wt') as handle:
         json.dump(content, handle, indent=4, sort_keys=False)
 
+
 class NoneDict(dict):
     def __missing__(self, key):
         return None
+
 
 def dict_to_nonedict(opt):
     """ convert to NoneDict, which return None for missing key. """
@@ -83,6 +87,7 @@ def dict_to_nonedict(opt):
     else:
         return opt
 
+
 def dict2str(opt, indent_l=1):
     """ dict to string for logger """
     msg = ''
@@ -94,6 +99,7 @@ def dict2str(opt, indent_l=1):
         else:
             msg += ' ' * (indent_l * 2) + k + ': ' + str(v) + '\n'
     return msg
+
 
 def parse(args):
     json_str = ''
@@ -115,6 +121,8 @@ def parse(args):
         opt['datasets'][opt['phase']]['which_dataset']['args']['z_times'] = args.z_times
     if args.lr is not None:
         opt['model']['which_model']['args']['optimizers'][0]['lr'] = args.lr
+    if args.step is not None:
+        opt['model']['which_networks'][0]['args']['beta_schedule'][opt['phase']]['n_timestep'] = args.step
     ''' set cuda environment '''
     if len(opt['gpu_ids']) > 1:
         opt['distributed'] = True
@@ -132,7 +140,7 @@ def parse(args):
     ''' set log directory '''
     experiments_root = os.path.join(opt['path']['base_dir'], '{}_{}'.format(opt['name'], get_timestamp()))
     mkdirs(experiments_root)
-
+    print('results and model will be saved in {}'.format(experiments_root))
     ''' save json '''
     write_json(opt, '{}/config.json'.format(experiments_root))
 
@@ -149,7 +157,7 @@ def parse(args):
     if 'debug' in opt['name']:
         opt['train'].update(opt['debug'])
 
-    ''' code backup ''' 
+    ''' code backup '''
     for name in os.listdir('.'):
         if name in ['config', 'models', 'core', 'slurm', 'data']:
             dst = os.path.join(opt['path']['code'], name)
@@ -161,8 +169,3 @@ def parse(args):
             shutil.copy(name, opt['path']['code'])
     opt['mean'] = args.mean
     return dict_to_nonedict(opt)
-
-
-
-
-
