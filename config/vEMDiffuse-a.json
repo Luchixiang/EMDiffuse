@@ -1,5 +1,5 @@
 {
-  "name": "test_phelp",
+  "name": "vEMDiffuse-a",
   // experiments name
   "norm": true,
   "percent": false,
@@ -24,7 +24,7 @@
     "results": "results",
     "checkpoint": "checkpoint",
 //    "resume_state": "experiments/emdiffusie-a-phlep/4860"
-    "resume_state": "experiments/train_test_phelp_230814_134745/checkpoint/420"
+    "resume_state": "experiments/vEMDiffuse-a/best"
 
 //      "resume_state": null // ex: 100, loading .state  and .pth from given epoch and iteration
   },

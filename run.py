@@ -76,6 +76,7 @@ if __name__ == '__main__':
     parser.add_argument('-P', '--port', default='21012', type=str)
     parser.add_argument('--mean', type=int, default=2)
     parser.add_argument('--lr', type=float, default=5e-5)
+    parser.add_argument('--step', type=int, default=None)
     parser.add_argument('--resume', type=str, default=None,
                         help='Resume state path and load epoch number e.g., experiments/EMDiffuse-n/2720')
 

@@ -12,4 +12,4 @@ numpy>=1.23.0
 pytest
 warmup_scheduler
 tqdm
-gradio==3.34.0
+imagecodecs

@@ -266,7 +266,7 @@ if __name__ == '__main__':
     parser.add_argument('--occlusion', action='store_true', help='predict occlusion masks')
     parser.add_argument('--patch_size', default=256, type=int)
     parser.add_argument('--border', default=32, type=int)
-    parser.add_argument('--overlap', default=0.125, type=int)
+    parser.add_argument('--overlap', default=0.125, type=float)
 
     args = parser.parse_args()
 

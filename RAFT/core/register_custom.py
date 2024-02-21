@@ -268,8 +268,8 @@ def registration(args, img_list, gt_list, patch_size=256, overlap=0.125,border=3
             save_gt_path = os.path.join(roi_gt_path, 'noise1')
             mkdir(save_wf_path)
             mkdir(save_gt_path)
-            gt_file_img = cv2.imread(img_list[img_count])
-            wf_file_img = cv2.imread(gt_list[img_count])
+            gt_file_img = cv2.imread(gt_list[img_count])
+            wf_file_img = cv2.imread(img_list[img_count])
             process_pair(wf_file_img, gt_file_img, save_wf_path, save_gt_path, model=model,
                          patch_size=patch_size, stride=int(patch_size * (1-overlap)), border=border)
 
@@ -277,7 +277,6 @@ def registration(args, img_list, gt_list, patch_size=256, overlap=0.125,border=3
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', default="../models/raft-things.pth")
-    parser.add_argument('--tissue', default='Brain')
     parser.add_argument('--path', help="dataset for evaluation")
     parser.add_argument('--category', help="save warped images")
     parser.add_argument('--small', action='store_true', help='use small model')
@@ -286,12 +285,12 @@ if __name__ == '__main__':
     parser.add_argument('--occlusion', action='store_true', help='predict occlusion masks')
     parser.add_argument('--patch_size', default=256, type=int)
     parser.add_argument('--border', default=32, type=int)
-    parser.add_argument('--overlap', default=0.125, type=int)
+    parser.add_argument('--overlap', default=0.125, type=float)
 
     args = parser.parse_args()
     img_list = []
     gt_list = []
     for file in os.listdir(os.path.join(args.path, 'img')):
         img_list.append(os.path.join(args.path, 'img', file))
-        gt_list.append(os.path.join(args.path, 'gt'. file))
+        gt_list.append(os.path.join(args.path, 'gt',  file))
     registration(args, img_list, gt_list, patch_size=args.patch_size, overlap=args.overlap, border=args.border)

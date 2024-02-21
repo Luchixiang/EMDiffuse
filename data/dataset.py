@@ -182,7 +182,7 @@ class vEMDiffuseTrainingDatasetPatches(
         max_nums = []  # z_depth in subfolder
         for cell_num in os.listdir(data_root):
             cell_path = os.path.join(data_root, cell_num)
-            gt_paths.append(os.path.join(cell_path))
+            gt_paths.append(cell_path)
             max_nums.append(find_max_number(os.path.join(cell_path)))
         return gt_paths, max_nums
 
@@ -202,7 +202,7 @@ class vEMDiffuseTrainingDatasetVolume(data.Dataset):  # Dataset for vEMDiffuse t
             transforms.Normalize(mean=[0.5], std=[0.5])
         ])
         self.depth = find_max_number(self.data_root)
-        print('layer number: ', self.depth + 1)
+        print('the number of layers: ', self.depth + 1)
         self.height, self.width = imread(os.path.join(data_root, str(self.depth) + '.tif')).shape
         self.loader = loader
         self.norm = norm
@@ -210,8 +210,6 @@ class vEMDiffuseTrainingDatasetVolume(data.Dataset):  # Dataset for vEMDiffuse t
 
     def __getitem__(self, index):
         ret = {}
-
-        # y_index = random.randint(7, se - 6)
         x_index = random.randint(0, self.width - self.image_size[0])
         y_index = random.randint(0, self.height - self.image_size[1])
         upper_bound = self.z_times // 2

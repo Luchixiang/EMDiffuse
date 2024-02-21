@@ -12,6 +12,8 @@ def mkdir(path):
 
 
 def crop(wf_img, save_wf_path, patch_size=256, overlap=0.125):
+    if len(wf_img.shape) > 2:
+        wf_img = cv2.cvtColor(wf_img, cv2.COLOR_BGR2GRAY)
     if wf_img.dtype == np.uint16: # convert to 8 bit
         cmin = wf_img.min()
         cmax = wf_img.max()
