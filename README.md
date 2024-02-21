@@ -1,20 +1,20 @@
 # EMDiffuse
 
-This repository is the official Pytorch implementation of our paper: **EMDiffuse: a diffusion-based deep learning method augmenting ultrastructural imaging and volume electron microscopy**.
+This repository contains the official Pytorch implementation of our paper: **EMDiffuse: A Diffusion-based Deep Learning Method Augmenting Ultrastructural Imaging and Volume Electron Microscopy**.
 
-EMDiffuse is a package for the application of diffusion models on electron microscopy images, aiming to enhance EM ultrastructural imaging and expand the realm of vEM capabilities. Here, we adopted the diffusion model for EM applications and developed **EMDiffuse-n** for EM denoising, **EMDiffuse-r** for EM super-resolution, and **vEMDiffuse-i** and **vEMDiffuse-a** for generating isotropic resolution data from anisotropic volumes for vEM. All the results, including the training and inference in the following instructions, will be saved in a newly created folder in `./experiments`. Also, you should replace ``--path`` arguments in all instructions into your dataset path.
+EMDiffuse offers a toolkit for applying diffusion models to electron microscopy (EM) images, designed to enhance ultrastructural imaging in EM and extend the capabilities of volume electron microscopy (vEM). We have tailored the diffusion model for EM applications, developing **EMDiffuse-n** for EM denoising, **EMDiffuse-r** for EM super-resolution, and **vEMDiffuse-i** and **vEMDiffuse-a** for generating isotropic resolution data from anisotropic volumes in vEM.  All results, including training and inference, will be stored in a newly created folder under `./experiments`. Please replace the `--path` arguments in the instructions with your dataset's path.
 
-Several representative model weights have been uploaded to [EMDiffuse_model_weight](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3590540_connect_hku_hk/EtSvqrIyrNREim5dJfabx2ABMLNhwk2Z9EsJDD4w6mls8g?e=OdP4Vq). You can download them and place them in the ``./experiments`` folder.  The weight in vEMDiffuse-i was trained on the [Openorgnelle liver dataset](https://doi.org/10.25378/janelia.16913047.v1). The weight in vEMDiffuse-a was trained on the [MICrONS multi-area dataset](https://www.microns-explorer.org/). 
+- A selection of model weights is available at  [EMDiffuse_model_weight](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3590540_connect_hku_hk/EtSvqrIyrNREim5dJfabx2ABMLNhwk2Z9EsJDD4w6mls8g?e=OdP4Vq). Download them and place them in the `./experiments` folder.  The vEMDiffuse-i model was trained on the  [Openorgnelle liver dataset](https://doi.org/10.25378/janelia.16913047.v1). and vEMDiffuse-a was trained on the [MICrONS multi-area dataset](https://www.microns-explorer.org/). 
 
-You can also visit our webpage for more information: https://www.haibojianglab.com/emdiffuse. 
+- For more information, please visit our webpage: https://www.haibojianglab.com/emdiffuse.
 
-It is highly recommended that the diffusion process be run on **GPU** both of training and testing.
+- Running the diffusion process on a **GPU** is highly recommended for both training and testing.
 
-Please feel free to contact us if you have any questions about the code.
+- Should you have any questions regarding the code, please do not hesitate to contact us.
 
 ### Update:
 
-1. Experiment on anisotropic volume with fewer layers(e.g., 128 layers). Since our input size is 256, we duplicate the anisotropic volume along the axial axis and then do vEMDiffuse-a training. (15/08/2023)
+1. Experiments on anisotropic volumes with fewer layers (e.g., 128 layers) are now possible. Given our input size 256, we duplicate the anisotropic volume along the axial axis before proceeding with vEMDiffuse-a training. (15/08/2023)
 
 ### Dependency
 
@@ -28,35 +28,35 @@ pip install -r requirements.txt
 
 ## Jupyter notebooks 
 
-Have a look at our jupyter notebook:
+Explore our Jupyter notebooks for step-by-step tutorials:
 
 - [2D EM denoising](https://github.com/Luchixiang/EMDiffuse/tree/master/example/denoise)
 - [2D EM super-resolution](https://github.com/Luchixiang/EMDiffuse/tree/master/example/super-res)
 - [Isotropic vEM reconstruction with isotropic training data](https://github.com/Luchixiang/EMDiffuse/tree/master/example/vEMDiffuse-i)
 - [Isotropic vEM reconstruction without isotropic training data](https://github.com/Luchixiang/EMDiffuse/tree/master/example/vEMDiffuse-a)
 
-In order to run the notebooks, install jupyter in your conda environment or try [Google Colab](https://colab.research.google.com/). 
+In order to run the notebooks, install jupyter in your conda environment or use [Google Colab](https://colab.research.google.com/). 
 
 ```
 pip install jupyter
 ```
 
-## EMDiffuse-n for 2D EM denoising
+## Instructions for EMDiffuse-n (2D EM denoising)
 
 ### Training:
 #### Step 1: Download the Dataset
 Download the dataset from https://zenodo.org/records/10205819
 #### Step 2:  Align and Crop
-This step automatically registers and crops the patch for model training.  For our multiple noise level dataset
+Automatically register and crop patches for model training. For our dataset with multiple noise levels:
 
 ```python
 cd RAFT/core
 python register.py --path /data/EMDiffuse_dataset/brain_train --tissue Brain --patch_size 256 --overlap 0.125
 ```
 
-Replace the argument  `--path` with the file path on which you place the dataset.  `patch_size` denotes the image dimensions of each cropped patch. As a general rule, use a patch size that is a power of two along all axes, or which is at least divisible by 8.  `overlap` is the overlap ratio of adjacent patches. 
+Replace the `path` with your dataset's file path. `patch_size` should be a power of two or divisible by 8, and `overlap` sets the overlap ratio of adjacent patches. 
 
-For transfer learning on other samples, please replace ``--tissue`` with the target such as the `Liver`, `Heart`, or `BM`. 
+For transfer learning on other samples, replace ``tissue`` with the target such as the `Liver`, `Heart`, or `BM`. 
 
 For your own denoise dataset with a structure like:
 
@@ -79,7 +79,7 @@ cd RAFT/core
 python register_custom.py --path /data/EMDiffuse_dataset/brain_train --patch_size 256 --overlap 0.125
 ```
 
-Replace the argument  `--path` with the file path on which you place the dataset. 
+Replace the `path` with your dataset's file path.
 
 #### Step 3: Model Training
 
@@ -90,7 +90,7 @@ python run.py -c config/EMDiffuse-n.json -b 16 --gpu 0,1,2,3 --port 20022 --path
 
 `gpu` denotes the GPU devices to be used during training. Multiple GPU training is supported. 
 
-Both the model's state and its training metrics are automatically saved within a newly created directory, `./experiments/train_EMDiffuse-r_time` as logged above. Here, `time` is a placeholder for the actual timestamp when the training session begins, ensuring each training session is uniquely identifiable. Furthermore, you can look at the predictions for some validation images, which can help recognize problems early on.
+Both the model's state and its training metrics are automatically saved within a newly created directory, `./experiments/train_EMDiffuse-r_time`, as logged above. Here, `time` is a placeholder for the actual timestamp when the training session begins. 
 
 ### Inference
 
@@ -110,9 +110,9 @@ python test_pre.py --path /data/EMDiffuse_dataset/brain_test --task denoise
 python run.py -p test -c config/EMDiffuse-n.json --gpu 0 -b 60 --path /data/EMDiffuse_dataset/brain_test/denoise_test_crop_patches --resume ./experiments/EMDiffuse-n/best --mean 1 --step 1000
 ```
 
-The diffusion model samples one plausible solution from the learned solution distribution. `mean` denotes the number of outputs you want to generate and averaging.  `resume` denotes the path to the model's weights file and the epoch number from which to load the model. `step` is the number of diffusion steps. More steps, higher image quality. 
+The diffusion model samples one plausible solution from the learned solution distribution. `mean` denotes the number of outputs you want to generate and averaging. `resume` indicates the path to the model's weight file. `step` controls the number of diffusion steps, with more steps generally leading to higher image quality.
 
-## EMDiffuse-r for EM super-resolution
+## Instructions for EMDiffuse-r (2D EM super-resolution)
 
 ### Training:
 
@@ -152,9 +152,9 @@ python test_pre.py --path /data/EMDiffuse_dataset/brain_test --task super
 python run.py -p test -c config/EMDiffuse-r.json --gpu 0 -b 60 --path /data/EMDiffuse_dataset/brain_test/super_test_crop_patches --resume ./experiments/EMDiffuse-r/best --mean 1 --step 1000
 ```
 
-## EMDiffuse-n and EMDiffuse-r Inference for Your Own EM Dataset
+## Instructions for EMDiffuse-n and EMDiffuse-r Inference with Your Own EM Dataset
 
-**All the above steps are designed for our multiple noise level denoising and super-resolution datasets. If you want to try your own dataset, you may need to modify the crop and register codes to meet the format of required dataset. We provide a simple demo here for you to implement inference on a dataset with the file structure:**
+**These instructions are tailored for denoising and super-resolution datasets. For your own dataset, you may need to adjust the cropping and registration codes to suit your data format. Here's a simple demonstration for performing inference on a dataset with the following file structure:**
 
 ```bash
 test_images:
@@ -162,8 +162,6 @@ test_images:
 		image2.tif
 		....
 ```
-
-i.e., all the noisy images or low-resolution images are in the same folder.
 
 #### Step1: Crop Image
 
@@ -176,13 +174,13 @@ python crop_single_file.py --path ./test_images --task denoise
 python run.py -p test -c config/EMDiffuse-n.json --gpu 0 -b 60 --path ./test_images/denoise_test_crop_patches/ --resume ./experiments/EMDiffuse-n/best --mean 1 --step 1000
 ```
 
-## vEMDiffuse for vEM isotropic reconstruction
+## Instructions for vEMDiffuse (Isotropic Reconstruction in vEM)
 
 ### Training
 
 #### Data Preparation
 
-Firstly, you should download volume data from [Openorganelle](https://openorganelle.janelia.org/) or use your own vEM data. The data structure should be like: 
+First, download or prepare your volume data. For isotropic training with vEMDiffuse-i, the data structure should like:
 
 ```
 vEM_data
@@ -192,17 +190,17 @@ vEM_data
 	n.tif // The (n+1)th layer
 ```
 
-#### Training vEMDiffuse-i
+#### Training vEMDiffuse-i with Isotropic Training Data
 For vEMDiffuse-i, the training data must be isotropic. 
 ```
 python run.py -c config/vEMDiffuse-i.json -b 16 --gpu 0,1,2,3 --port 20022 --path ./vEM_data -z 6 --lr 5e-5
 ```
 
-``-z`` means the subsampling factor of the Z axis. In this example, to reconstruct an 8 nm x 8 nm x 8 nm volume from an 8 nm x 8 nm x 48 nm volume, the subsampling factor should be 6. 
+``-z`` means the subsampling factor of the Z axis. For example, to reconstruct an 8 nm x 8 nm x 8 nm volume from an 8 nm x 8 nm x 48 nm volume, the subsampling factor should be 6. 
 
-####  Training vEMDiffuse-a
+####  Training vEMDiffuse-a w/o Isotropic Training Data
 
-For vEMDiffuse-a, we don't need the isotropic training data. The vEMa_pre.py first slices your volume along the lateral (Y axis) to construct the training data. The model learns the lateral information and applies it to improve axial resolution. 
+Construct training data by slicing YZ views. 
  ```
  python vEMa_pre.py --path ./vEM_data
  python run.py -c config/vEMDiffuse-a.json -b 16 --gpu 0,1,2,3 --port 20022 --path ./vEM_data/transposed -z 6 --lr 5e-5
@@ -210,7 +208,7 @@ For vEMDiffuse-a, we don't need the isotropic training data. The vEMa_pre.py fir
 
 ### Testing 
 
-Firstly, you need to have an anisotropic volume with the data structure like: 
+To test, prepare an anisotropic volume with a similar structure to the one mentioned above. Execute the model using the appropriate configuration and model weights for isotropic reconstruction.
 
 ```
 vEM_test_data
@@ -224,4 +222,4 @@ vEM_test_data
 python run.py -p test -c config/vEMDiffuse-i.json --gpu 0 -b 16 --path ./vEM_test_data/ -z 6 --resume ./experiments/vEMDiffuse-i/best --mean 1 --step 200
 ```
 
-Don't forget to modify the model weight directory. 
+Remember to adjust the model weight directory according to where your best model weights are saved. 
