@@ -2,15 +2,17 @@
 
 This repository contains the official Pytorch implementation of our paper: **EMDiffuse: A Diffusion-based Deep Learning Method Augmenting Ultrastructural Imaging and Volume Electron Microscopy**.
 
-EMDiffuse offers a toolkit for applying diffusion models to electron microscopy (EM) images, designed to enhance ultrastructural imaging in EM and extend the capabilities of volume electron microscopy (vEM). We have tailored the diffusion model for EM applications, developing **EMDiffuse-n** for EM denoising, **EMDiffuse-r** for EM super-resolution, and **vEMDiffuse-i** and **vEMDiffuse-a** for generating isotropic resolution data from anisotropic volumes in vEM.  All results, including training and inference, will be stored in a newly created folder under `./experiments`. Please replace the `--path` arguments in the instructions with your dataset's path.
+EMDiffuse offers a toolkit for applying diffusion models to electron microscopy (EM) images, designed to enhance ultrastructural imaging in EM and extend the capabilities of volume electron microscopy (vEM). We have tailored the diffusion model for EM applications, developing **EMDiffuse-n** for EM denoising, **EMDiffuse-r** for EM super-resolution, and **vEMDiffuse-i** and **vEMDiffuse-a** for generating isotropic resolution data from anisotropic volumes in vEM.  
 
-- A selection of model weights is available at  [EMDiffuse_model_weight](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3590540_connect_hku_hk/EtSvqrIyrNREim5dJfabx2ABMLNhwk2Z9EsJDD4w6mls8g?e=OdP4Vq). Download them and place them in the `./experiments` folder.  The vEMDiffuse-i model was trained on the  [Openorgnelle liver dataset](https://doi.org/10.25378/janelia.16913047.v1). and vEMDiffuse-a was trained on the [MICrONS multi-area dataset](https://www.microns-explorer.org/). 
+A selection of model weights is available at  [EMDiffuse_model_weight](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3590540_connect_hku_hk/EtSvqrIyrNREim5dJfabx2ABMLNhwk2Z9EsJDD4w6mls8g?e=OdP4Vq). Download them and place them in the `./experiments` folder.  The vEMDiffuse-i model was trained on the  [Openorgnelle liver dataset](https://doi.org/10.25378/janelia.16913047.v1). and vEMDiffuse-a was trained on the [MICrONS multi-area dataset](https://www.microns-explorer.org/). 
 
-- For more information, please visit our webpage: https://www.haibojianglab.com/emdiffuse.
+All results, including training and inference, will be stored in a newly created folder under `./experiments`. 
 
-- Running the diffusion process on a **GPU** is highly recommended for both training and testing.
+Running the diffusion process on a **GPU** is highly recommended for both training and testing.
 
-- Should you have any questions regarding the code, please do not hesitate to contact us.
+For more information, please visit our webpage: https://www.haibojianglab.com/emdiffuse.
+
+Should you have any questions regarding the code, please do not hesitate to contact us.
 
 ### Update:
 
@@ -58,7 +60,7 @@ Replace the `path` with your dataset's file path. `patch_size` should be a power
 
 For transfer learning on other samples, replace ``tissue`` with the target such as the `Liver`, `Heart`, or `BM`. 
 
-For your own denoise dataset with a structure like:
+For your own denoise dataset with file structure:
 
 ```
 Denoise_dataset
@@ -84,13 +86,12 @@ Replace the `path` with your dataset's file path.
 #### Step 3: Model Training
 
 ```python
-cd ../..
 python run.py -c config/EMDiffuse-n.json -b 16 --gpu 0,1,2,3 --port 20022 --path /data/EMDiffuse_dataset/brain_train/denoise/train_wf --lr 5e-5
 ```
 
 `gpu` denotes the GPU devices to be used during training. Multiple GPU training is supported. 
 
-Both the model's state and its training metrics are automatically saved within a newly created directory, `./experiments/train_EMDiffuse-r_time`, as logged above. Here, `time` is a placeholder for the actual timestamp when the training session begins. 
+Both the model's state and its training metrics are automatically saved within a newly created directory, `./experiments/train_EMDiffuse-r_time`. Here, `time` is a placeholder for the actual timestamp when the training session begins. 
 
 ### Inference
 
@@ -110,7 +111,7 @@ python test_pre.py --path /data/EMDiffuse_dataset/brain_test --task denoise
 python run.py -p test -c config/EMDiffuse-n.json --gpu 0 -b 60 --path /data/EMDiffuse_dataset/brain_test/denoise_test_crop_patches --resume ./experiments/EMDiffuse-n/best --mean 1 --step 1000
 ```
 
-The diffusion model samples one plausible solution from the learned solution distribution. `mean` denotes the number of outputs you want to generate and averaging. `resume` indicates the path to the model's weight file. `step` controls the number of diffusion steps, with more steps generally leading to higher image quality.
+The diffusion model samples one plausible solution from the learned solution distribution. `mean` denotes the number of outputs to generate and averaging (each individual output and averaged output will be saved). `resume` indicates the path to the model's weight file. `step` controls the number of diffusion steps, with more steps generally leading to higher image quality.
 
 ## Instructions for EMDiffuse-r (2D EM super-resolution)
 
@@ -154,7 +155,7 @@ python run.py -p test -c config/EMDiffuse-r.json --gpu 0 -b 60 --path /data/EMDi
 
 ## Instructions for EMDiffuse-n and EMDiffuse-r Inference with Your Own EM Dataset
 
-**These instructions are tailored for denoising and super-resolution datasets. For your own dataset, you may need to adjust the cropping and registration codes to suit your data format. Here's a simple demonstration for performing inference on a dataset with the following file structure:**
+**These instructions are tailored for our denoising and super-resolution datasets. For your own dataset, you may need to adjust the cropping and registration codes to suit your data format. Here's a simple demonstration for performing inference on a dataset with the following file structure:**
 
 ```bash
 test_images:
@@ -180,7 +181,7 @@ python run.py -p test -c config/EMDiffuse-n.json --gpu 0 -b 60 --path ./test_ima
 
 #### Data Preparation
 
-First, download or prepare your volume data. For isotropic training with vEMDiffuse-i, the data structure should like:
+Download or prepare your vEM training data. The training file structure should be like:
 
 ```
 vEM_data
@@ -191,7 +192,6 @@ vEM_data
 ```
 
 #### Training vEMDiffuse-i with Isotropic Training Data
-For vEMDiffuse-i, the training data must be isotropic. 
 ```
 python run.py -c config/vEMDiffuse-i.json -b 16 --gpu 0,1,2,3 --port 20022 --path ./vEM_data -z 6 --lr 5e-5
 ```
@@ -200,15 +200,20 @@ python run.py -c config/vEMDiffuse-i.json -b 16 --gpu 0,1,2,3 --port 20022 --pat
 
 ####  Training vEMDiffuse-a w/o Isotropic Training Data
 
-Construct training data by slicing YZ views. 
+Slice along YZ view:
  ```
  python vEMa_pre.py --path ./vEM_data
- python run.py -c config/vEMDiffuse-a.json -b 16 --gpu 0,1,2,3 --port 20022 --path ./vEM_data/transposed -z 6 --lr 5e-5
  ```
+
+Training
+
+```
+python run.py -c config/vEMDiffuse-a.json -b 16 --gpu 0,1,2,3 --port 20022 --path ./vEM_data/transposed -z 6 --lr 5e-5
+```
 
 ### Testing 
 
-To test, prepare an anisotropic volume with a similar structure to the one mentioned above. Execute the model using the appropriate configuration and model weights for isotropic reconstruction.
+To test, prepare an anisotropic volume. Execute the model using the appropriate configuration and model weights for isotropic reconstruction.
 
 ```
 vEM_test_data
