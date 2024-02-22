@@ -102,10 +102,8 @@ class DiReP(BaseModel):
                 ret_result.append(self.gt_image[idx,i,:,: ].detach().float().cpu())
                 ret_path.append('Out_{}_{}'.format(i, self.path[idx]))
                 ret_result.append(self.output[idx, i, :, :].detach().float().cpu())
-
             # ret_path.append('Process_{}'.format(self.path[idx]))
             # ret_result.append(self.visuals[idx::self.batch_size].detach().float().cpu())
-
             ret_path.append('Input_upper_{}'.format(self.path[idx]))
             ret_result.append(self.cond_image[idx, 0, :, :].detach().float().cpu())
             ret_path.append('Input_lower_{}'.format(self.path[idx]))
@@ -174,7 +172,7 @@ class DiReP(BaseModel):
         with torch.no_grad():
             for phase_data in self.phase_loader:
                 self.set_input(phase_data)
-                mean_outputs = []
+                self.outputs = []
                 for i in range(self.mean):
                     if self.opt['distributed']:
                         output, self.visuals = self.netG.module.restoration(self.cond_image,
@@ -185,9 +183,14 @@ class DiReP(BaseModel):
                                                                      sample_num=self.sample_num,
                                                                      y_0=self.gt_image,
                                                                      path=self.path)
-                    mean_outputs.append(output)
-                self.output = torch.stack(mean_outputs, dim=0).mean(dim=0)
-                self.model_uncertainty = torch.stack(mean_outputs, dim=0).mean(dim=0)
+                    self.outputs.append(output)
+
+                if self.mean > 1:
+                    self.output = torch.stack(self.outputs, dim=0).mean(dim=0)
+                    self.model_uncertainty = torch.stack(self.outputs, dim=0).std(dim=0)
+                else:
+                    self.output = self.outputs[0]
+                    self.model_uncertainty = torch.zeros_like(self.output)
                 self.iter += self.batch_size
                 self.writer.set_iter(self.epoch, self.iter, phase='test')
                 for met in self.metrics:

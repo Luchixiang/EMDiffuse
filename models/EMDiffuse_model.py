@@ -102,7 +102,10 @@ class DiReP(BaseModel):
             ret_result.append(self.output[idx].detach().float().cpu())
             ret_path.append('Input_{}'.format(self.path[idx]))
             ret_result.append(self.cond_image[idx].detach().float().cpu())
-
+            if self.mean > 1:
+                for output_index in range(len(self.outputs)):
+                    ret_path.append('Out_round{}_{}'.format(output_index, self.path[idx]))
+                    ret_result.append(self.outputs[output_index][idx].detach().float().cpu())
         self.results_dict = self.results_dict._replace(name=ret_path, result=ret_result)
         return self.results_dict._asdict()
 
@@ -176,15 +179,15 @@ class DiReP(BaseModel):
         with torch.no_grad():
             for phase_data in self.phase_loader:
                 self.set_input(phase_data)
-                mean_outputs = []
+                self.outputs = []
                 for i in range(self.mean):
                     output = self.model_test(self.sample_num)
-                    mean_outputs.append(output)
+                    self.outputs.append(output)
                 if self.mean > 1:
-                    self.output = torch.stack(mean_outputs, dim=0).mean(dim=0)
-                    self.model_uncertainty = torch.stack(mean_outputs, dim=0).std(dim=0)
+                    self.output = torch.stack(self.outputs, dim=0).mean(dim=0)
+                    self.model_uncertainty = torch.stack(self.outputs, dim=0).std(dim=0)
                 else:
-                    self.output = mean_outputs[0]
+                    self.output = self.outputs[0]
                     self.model_uncertainty = torch.zeros_like(self.output)
                 self.iter += self.batch_size
                 self.writer.set_iter(self.epoch, self.iter, phase='test')
