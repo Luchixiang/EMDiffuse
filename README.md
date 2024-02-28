@@ -4,7 +4,7 @@ This repository contains the official Pytorch implementation of our paper: **EMD
 
 EMDiffuse offers a toolkit for applying diffusion models to electron microscopy (EM) images, designed to enhance ultrastructural imaging in EM and extend the capabilities of volume electron microscopy (vEM). We have tailored the diffusion model for EM applications, developing **EMDiffuse-n** for EM denoising, **EMDiffuse-r** for EM super-resolution, and **vEMDiffuse-i** and **vEMDiffuse-a** for generating isotropic resolution data from anisotropic volumes in vEM.  
 
-A selection of model weights is available at  [EMDiffuse_model_weight](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3590540_connect_hku_hk/EtSvqrIyrNREim5dJfabx2ABMLNhwk2Z9EsJDD4w6mls8g?e=OdP4Vq). Download them and place them in the `./experiments` folder.  The vEMDiffuse-i model was trained on the  [Openorgnelle liver dataset](https://doi.org/10.25378/janelia.16913047.v1). and vEMDiffuse-a was trained on the [MICrONS multi-area dataset](https://www.microns-explorer.org/). 
+A selection of model weights is available at  [EMDiffuse_model_weight](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3590540_connect_hku_hk/EtSvqrIyrNREim5dJfabx2ABMLNhwk2Z9EsJDD4w6mls8g?e=OdP4Vq). Download them and place them in the `./experiments` folder.  The vEMDiffuse-i model was trained on the  [Openorgnelle liver dataset](https://doi.org/10.25378/janelia.16913047.v1). And vEMDiffuse-a was trained on the [MICrONS multi-area dataset](https://www.microns-explorer.org/). 
 
 All results, including training and inference, will be stored in a newly created folder under `./experiments`. 
 
@@ -47,9 +47,9 @@ pip install jupyter
 
 ### Training:
 #### Step 1: Download the Dataset
-Download the dataset from https://zenodo.org/records/10205819
+Download the dataset from https://zenodo.org/records/10205819.
 #### Step 2:  Align and Crop
-Automatically register and crop patches for model training. For our dataset with multiple noise levels:
+Register and crop patches for model training. For our dataset with multiple noise levels:
 
 ```python
 cd RAFT/core
@@ -58,7 +58,7 @@ python register.py --path /data/EMDiffuse_dataset/brain_train --tissue Brain --p
 
 Replace the `path` with your dataset's file path. `patch_size` should be a power of two or divisible by 8, and `overlap` sets the overlap ratio of adjacent patches. 
 
-For transfer learning on other samples, replace ``tissue`` with the target such as the `Liver`, `Heart`, or `BM`. 
+For transfer learning on other samples, replace ``tissue`` with the target, such as the `Liver`, `Heart`, or `BM`. 
 
 For your own denoise dataset with file structure:
 
@@ -98,7 +98,7 @@ Both the model's state and its training metrics are automatically saved within a
 
 #### Step 1: Download the Dataset
 
-Download the dataset from https://zenodo.org/records/10205819
+Download the dataset from https://zenodo.org/records/10205819.
 
 #### Step 2: Crop Image
 
@@ -114,7 +114,7 @@ Download the [model weight](https://connecthkuhk-my.sharepoint.com/:f:/g/persona
 python run.py -p test -c config/EMDiffuse-n.json --gpu 0 -b 60 --path /data/EMDiffuse_dataset/brain_test/denoise_test_crop_patches --resume ./experiments/EMDiffuse-n/best --mean 1 --step 1000
 ```
 
-The diffusion model samples one plausible solution from the learned solution distribution. `mean` denotes the number of outputs to generate and averaging (each individual output and averaged output will be saved). `resume` indicates the path to the model's weight file. `step` controls the number of diffusion steps, with more steps generally leading to higher image quality.
+The diffusion model samples one plausible solution from the learned solution distribution. `mean` denotes the number of outputs to generate and averaging (each output and averaged output will be saved). `resume` indicates the path to the model's weight file. `step` controls the number of diffusion steps, with more steps generally leading to higher image quality.
 
 ## Instructions for EMDiffuse-r (2D EM super-resolution)
 
@@ -122,7 +122,7 @@ The diffusion model samples one plausible solution from the learned solution dis
 
 #### Step 1: Download the Dataset
 
-Download the dataset from https://zenodo.org/records/10205819
+Download the dataset from https://zenodo.org/records/10205819.
 
 #### Step 2: Align and Crop
 
@@ -142,7 +142,7 @@ python run.py -c config/EMDiffuse-r.json -b 16 --gpu 0,1,2,3 --port 20022 --path
 
 #### Step 1: Download the Dataset
 
-Download the dataset from https://zenodo.org/records/10205819
+Download the dataset from https://zenodo.org/records/10205819.
 
 #### Step 2 Crop Images
 
@@ -232,4 +232,4 @@ vEM_test_data
 python run.py -p test -c config/vEMDiffuse-i.json --gpu 0 -b 16 --path ./vEM_test_data/ -z 6 --resume ./experiments/vEMDiffuse-i/best --mean 1 --step 200
 ```
 
-Remember to adjust the model weight directory according to where your best model weights are saved. 
+Adjust the model weight directory to where your best model weights are saved. 
