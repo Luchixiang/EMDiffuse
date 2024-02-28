@@ -86,6 +86,7 @@ Replace the `path` with your dataset's file path.
 #### Step 3: Model Training
 
 ```python
+cd ../..
 python run.py -c config/EMDiffuse-n.json -b 16 --gpu 0,1,2,3 --port 20022 --path /data/EMDiffuse_dataset/brain_train/denoise/train_wf --lr 5e-5
 ```
 
