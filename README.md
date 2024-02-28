@@ -107,6 +107,8 @@ python test_pre.py --path /data/EMDiffuse_dataset/brain_test --task denoise
 
 #### Step 3: Testing
 
+Download the [model weight](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3590540_connect_hku_hk/EtSvqrIyrNREim5dJfabx2ABMLNhwk2Z9EsJDD4w6mls8g?e=OdP4Vq) and place them in the `./experiments` folder. 
+
 ```python
 python run.py -p test -c config/EMDiffuse-n.json --gpu 0 -b 60 --path /data/EMDiffuse_dataset/brain_test/denoise_test_crop_patches --resume ./experiments/EMDiffuse-n/best --mean 1 --step 1000
 ```
@@ -148,6 +150,8 @@ python test_pre.py --path /data/EMDiffuse_dataset/brain_test --task super
 ```
 
 #### Step 3 Testing
+
+Download the [model weight](https://connecthkuhk-my.sharepoint.com/:f:/g/personal/u3590540_connect_hku_hk/EtSvqrIyrNREim5dJfabx2ABMLNhwk2Z9EsJDD4w6mls8g?e=OdP4Vq) and place them in the `./experiments` folder. 
 
 ```python
 python run.py -p test -c config/EMDiffuse-r.json --gpu 0 -b 60 --path /data/EMDiffuse_dataset/brain_test/super_test_crop_patches --resume ./experiments/EMDiffuse-r/best --mean 1 --step 1000
