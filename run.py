@@ -70,13 +70,16 @@ if __name__ == '__main__':
     parser.add_argument('--path', type=str, default=None, help='patch of cropped patches')
     parser.add_argument('-p', '--phase', type=str, choices=['train', 'test'], help='Run train or test', default='train')
     parser.add_argument('-b', '--batch', type=int, default=None, help='Batch size in every gpu')
-    parser.add_argument('--gpu', type=str, default=None)
+    parser.add_argument('--gpu', type=str, default=None, help='the gpu devices used')
     parser.add_argument('-d', '--debug', action='store_true')
-    parser.add_argument('-z', '--z_times', default=None, type=int)
+    parser.add_argument('-z', '--z_times', default=None, type=int, help='The anisotropy time of the volume em')
     parser.add_argument('-P', '--port', default='21012', type=str)
-    parser.add_argument('--mean', type=int, default=2)
-    parser.add_argument('--lr', type=float, default=5e-5)
-    parser.add_argument('--step', type=int, default=None)
+    parser.add_argument('--mean', type=int, default=2,
+                        help='EMDiffuse samples one plausible solution from distribution. The number of samples you '
+                             'want to generate and averaging')
+    parser.add_argument('--lr', type=float, default=5e-5, help='Learning rate')
+    parser.add_argument('--step', type=int, default=None, help='Steps of the diffusion process. More steps lead to '
+                                                               'better image quality. ')
     parser.add_argument('--resume', type=str, default=None,
                         help='Resume state path and load epoch number e.g., experiments/EMDiffuse-n/2720')
 
